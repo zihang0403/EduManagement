@@ -12,15 +12,19 @@ class LoginWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit LoginWindow(QWidget *parent = nullptr);
-    ~LoginWindow();
-
-private:
-    Ui::LoginWindow *ui;
-    enum loginBy{
+    enum LoginBy{
         stu,
         teacher
     };
+
+    explicit LoginWindow(QWidget *parent = nullptr, enum LoginBy loginBy = stu);
+    ~LoginWindow();
+
+public slots:
+    void loginBtnClick();
+
+private:
+    Ui::LoginWindow *ui;
 };
 
 #endif // LOGINWINDOW_H

@@ -13,6 +13,7 @@ CONFIG += c++17
 SOURCES += \
     courseinfowindow.cpp \
     coursemanagewindow.cpp \
+    fileoperation.cpp \
     loginwindow.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 HEADERS += \
     courseinfowindow.h \
     coursemanagewindow.h \
+    fileoperation.h \
     loginwindow.h \
     mainwindow.h \
     scoreinfowindow.h \
