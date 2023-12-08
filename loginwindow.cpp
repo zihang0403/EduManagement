@@ -9,6 +9,13 @@ LoginWindow::LoginWindow(QWidget *parent, enum LoginBy loginBy) :
 {
     ui->setupUi(this);
     connect(ui->loginButton, &QPushButton::clicked, this, &LoginWindow::loginBtnClick);
+
+    ui->loginWindowLable->setText(
+        (loginBy== LoginWindow::stu) ?
+        "同学你好！请登录！如无账户请联系教师添加" :
+        "教师你好！请登录！如无账户请联系管理员"
+        );
+
 }
 
 LoginWindow::~LoginWindow()
@@ -20,3 +27,4 @@ void LoginWindow::loginBtnClick()
 {
     qDebug()<<"whatf";
 }
+
