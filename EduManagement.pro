@@ -13,27 +13,28 @@ CONFIG += c++17
 SOURCES += \
     courseinfowindow.cpp \
     coursemanagewindow.cpp \
-    fileoperation.cpp \
-    loginwindow.cpp \
+    dataoperation.cpp \
     main.cpp \
     mainwindow.cpp \
+    note.cpp \
     scoreinfowindow.cpp \
     scoremanagewindow.cpp
 
 HEADERS += \
+    Student.h \
     courseinfowindow.h \
     coursemanagewindow.h \
-    fileoperation.h \
-    loginwindow.h \
+    dataoperation.h \
     mainwindow.h \
+    note.h \
     scoreinfowindow.h \
     scoremanagewindow.h
 
 FORMS += \
     courseinfowindow.ui \
     coursemanagewindow.ui \
-    loginwindow.ui \
     mainwindow.ui \
+    note.ui \
     scoreinfowindow.ui \
     scoremanagewindow.ui
 

@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "loginwindow.h"
+#include <QCloseEvent>
+#include <QApplication>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,14 +16,21 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void showLoginWindow(enum LoginWindow::LoginBy);
     void reShowMainWindow();
     static MainWindow *getInstance();
+    void closeEvent(QCloseEvent * event) override
+    {
+        //确认接收关闭事件
+        event->accept();
+
+        //退出程序
+        QCoreApplication::exit();
+    }
 
 //定义槽函数后一定要在CPP中实现！！！不然报错！！！
 public slots:
-    void StuButtonClick();
-    void ManageButtonClick();
+    void LoginButtonClick();
+    void setLoginProperty(bool prop);
 
 private:
     Ui::MainWindow *ui;
