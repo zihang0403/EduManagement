@@ -4,7 +4,7 @@
 
 /**
  *  FileRead 从文件中读取数据
- *  文件读取格式 标签1:内容1 标签2:内容2 标签3:内容3......\n
+ *  文件读取格式 内容1 内容2 内容3...... 内容n \n
  *  存储格式 QList<String>
  */
 QList<QString> DataRead(const QString &Filename)
@@ -17,20 +17,18 @@ QList<QString> DataRead(const QString &Filename)
         QTextStream in(&file);//文件使用文本流
         QString dataText = in.readLine();//读一行
         QString pendingData = dataText;//待处理数据
-        int separatorIdx = pendingData.indexOf(':');//搜索 ':' 位置
-        while(separatorIdx != -1)//查找不到 ':' 时停止
+        int separatorIdx = pendingData.indexOf(' ');//搜索 ':' 位置
+        while(separatorIdx != -1)//查找不到 ' ' 时停止
         {
-            // ':' 前为标签 去除空格换行
-            QString label = pendingData.left(separatorIdx).trimmed();
-            // ':' 后到下一个空格截止为内容 去除空格换行
-            QString content = pendingData.mid(separatorIdx + 1, pendingData.indexOf(' ')).trimmed();
+            // 取 ' ' 前数据 去除空格换行
+            QString content = pendingData.left(separatorIdx).trimmed();
 
             // 标签内容依次存储进list
-            data << label << content;
+            data << content;
             // 从待处理数据中移除已存储数据
-            pendingData.remove(label+':'+content);
-            // 下一个 ':' 位置
-            separatorIdx = pendingData.indexOf(':');
+            pendingData.remove(content+' ');
+            // 下一个 ' ' 位置
+            separatorIdx = pendingData.indexOf(' ');
         }
         return data;
     }

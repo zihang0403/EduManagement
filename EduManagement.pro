@@ -1,5 +1,6 @@
 QT       += core gui
 QT       += widgets
+QT       += sql
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -18,7 +19,8 @@ SOURCES += \
     mainwindow.cpp \
     note.cpp \
     scoreinfowindow.cpp \
-    scoremanagewindow.cpp
+    scoremanagewindow.cpp \
+    studentinfowindow.cpp
 
 HEADERS += \
     Student.h \
@@ -28,7 +30,8 @@ HEADERS += \
     mainwindow.h \
     note.h \
     scoreinfowindow.h \
-    scoremanagewindow.h
+    scoremanagewindow.h \
+    studentinfowindow.h
 
 FORMS += \
     courseinfowindow.ui \
@@ -36,10 +39,15 @@ FORMS += \
     mainwindow.ui \
     note.ui \
     scoreinfowindow.ui \
-    scoremanagewindow.ui
+    scoremanagewindow.ui \
+    studentinfowindow.ui
 
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    QSS/OIP.jfif \
+    QSS/mainStyle.qss

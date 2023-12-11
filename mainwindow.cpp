@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QFile>
 #include <QButtonGroup>
 #include <QMessageBox>
 
@@ -13,6 +14,21 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // 将设计的用户界面加载到此类中，并设置对应的属性，信号，槽等，完成相应的初始化工作
     ui->setupUi(this);
+
+// 读取QSS文件，绝对路径没问题相对路径有问题，背景图片布局待修改
+//    QString appDir = QCoreApplication::applicationDirPath();
+//    QFile styleFile(appDir + "/mainStyle.qss");
+//    QFile styleFile(appDir + "/1.txt");
+//    if(styleFile.open(QFile::ReadOnly|QFile::Text))
+//    {
+//        QString styleSheet = QLatin1String(styleFile.readAll());
+//        this->setStyleSheet(styleSheet);
+//    }
+//    else
+//    {
+//        QMessageBox::information(this, "文件读取状态", "失败！");
+
+//    }
 
     // 创建ButtonGroup
     QButtonGroup *buttonGroup = new QButtonGroup(parent);

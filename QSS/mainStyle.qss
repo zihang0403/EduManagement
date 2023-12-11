@@ -1,0 +1,28 @@
+/* mainDtyle.qss */
+
+QWidget{
+    background-image: url(1.jpg);
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+QLineEdit{
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 2px 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+QPushButton{
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background: qradialgradient(cx :0.5, cy:0.5, fx:0.5, fy:0.5,
+                        radius:0.5, stop:0 #3498db, stop:1 #2980b9);
+    color: white;
+}
+
+QPushButton:hover{
+    background: qradialgradient(cx :0.5, cy:0.5, fx:0.5, fy:0.5,
+                        radius:0.5, stop:0 #2980b9, stop:1 #3498db);
+}
