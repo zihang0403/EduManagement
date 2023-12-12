@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 // 读取QSS文件，绝对路径没问题相对路径有问题，背景图片布局待修改
 //    QString appDir = QCoreApplication::applicationDirPath();
 //    QFile styleFile(appDir + "/mainStyle.qss");
-//    QFile styleFile(appDir + "/1.txt");
+////    QFile styleFile(appDir + "/1.txt");
 //    if(styleFile.open(QFile::ReadOnly|QFile::Text))
 //    {
 //        QString styleSheet = QLatin1String(styleFile.readAll());
@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
 //    else
 //    {
 //        QMessageBox::information(this, "文件读取状态", "失败！");
-
 //    }
 
     // 创建ButtonGroup
