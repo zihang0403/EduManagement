@@ -28,6 +28,7 @@ HEADERS += \
     coursemanagewindow.h \
     dataoperation.h \
     mainwindow.h \
+    mysqlconnector.h \
     note.h \
     scoreinfowindow.h \
     scoremanagewindow.h \

@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QButtonGroup>
 #include <QMessageBox>
+#include <QSqlDatabase>
 
 // 登录属性：学生/教师
 static bool loginProperty = false;
@@ -81,7 +82,9 @@ void MainWindow::setLoginProperty(bool prop = false)
 // 开始登录
 void MainWindow::LoginButtonClick()
 {
-    QString loginPropertyStr = loginProperty ? "true" : "false";
-    QMessageBox::information(this, "登录状态", "loginProperty = " + loginPropertyStr);
-    qWarning() << "loginProperty = " << loginProperty;
+//    QString loginPropertyStr = loginProperty ? "true" : "false";
+//    QMessageBox::information(this, "登录状态", "loginProperty = " + loginPropertyStr);
+//    qWarning() << "loginProperty = " << loginProperty;
+
 }
+
