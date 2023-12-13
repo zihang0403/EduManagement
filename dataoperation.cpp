@@ -1,3 +1,5 @@
+#ifdef NEEDFILE
+
 #include "dataoperation.h"
 #include <QFile>
 #include <QDebug>
@@ -66,3 +68,5 @@ bool DataAppend(const QString &Filename, QList<QString> &Data)
     }
     return false;
 }
+
+#endif

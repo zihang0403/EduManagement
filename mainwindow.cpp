@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "mysqlconnector.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
@@ -86,5 +87,12 @@ void MainWindow::LoginButtonClick()
 //    QMessageBox::information(this, "登录状态", "loginProperty = " + loginPropertyStr);
 //    qWarning() << "loginProperty = " << loginProperty;
 
+    QString tableName = loginProperty ? "teacherinfo" : "studentinfo";
+    MySqlConnector *conn = new MySqlConnector();
+    QStringList psw ;
+
+    psw.append("password");
+    conn->DataBaseConnect();
+    conn->DataBaseOut(tableName, psw);
 }
 

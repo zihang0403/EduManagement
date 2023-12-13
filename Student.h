@@ -8,8 +8,6 @@ class Student
 {
 public:
     Student();
-    Student(QList<QString> &student)
-        : studentID(student){}
     //使用&引用传递字符串避免复制对象产生的性能开销
     Student(const QString &studentID,const QString &password, const QString &name, const QString &sex, const QString &bornDay, bool status = true)
         : studentID(studentID), password(password), name(name), sex(sex), bornDay(bornDay), status(status) {}

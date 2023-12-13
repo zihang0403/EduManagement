@@ -1,3 +1,6 @@
+//#define NEEDFILE
+#ifdef NEEDFILE
+
 #ifndef DATAOPERATION_H
 #define DATAOPERATION_H
 
@@ -12,3 +15,5 @@ public:
 };
 
 #endif // DATAOPERATION_H
+
+#endif
