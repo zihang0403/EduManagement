@@ -7,6 +7,9 @@
 
 class MySqlConnector
 {
+private:
+    QSqlDatabase db;
+
 public:
     /**
      * @brief DataBaseConnect 连接数据库
@@ -19,7 +22,7 @@ public:
         db.setPort(3306);
         db.setUserName("root");
         db.setPassword("123456");
-        db.setDatabaseName("edumagement");
+        db.setDatabaseName("edumanagement");
 
         if(!db.open())
         {
@@ -133,8 +136,6 @@ public:
     {
         db.close();
     }
-private:
-    QSqlDatabase db;
 };
 
 #endif // MYSQLCONNECTOR_H

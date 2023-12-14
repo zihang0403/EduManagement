@@ -93,7 +93,12 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
 //    qWarning() << "loginProperty = " << loginProperty;
 
     MySqlConnector *conn = new MySqlConnector();
-    conn->DataBaseConnect();
+    if(!conn->DataBaseConnect())
+    {
+        qDebug() << "连接失败！" << Qt::endl;
+            return;
+    }
+
 
     QString sql;
     QSqlQuery query;
@@ -125,9 +130,9 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
                     }
                     else
                     {
-                        StudentInfoWindow stuInfoWindow;
-
+                        StudentInfoWindow stuInfoWindow ;
                         stuInfoWindow.show();
+//                        this->hide();
                     }
                 }
                 else
@@ -150,13 +155,6 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
         qDebug() << "准备查询失败！：" << query.lastError().text();
     }
 
-
-
-
-
-    if(query.next())
-    {
-
-    }
+    conn->DataBaseClose();
 }
 
