@@ -13,7 +13,41 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QListWidget" name="sidebar">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>1</y>
+      <width>111</width>
+      <height>551</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QStackedWidget" name="contentStack">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>0</y>
+      <width>321</width>
+      <height>551</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="page">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QWidget" name="page_2">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>

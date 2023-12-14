@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QApplication>
+#include "studentinfowindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +26,11 @@ public:
 
         //退出程序
         QCoreApplication::exit();
+    }
+    void showStudentInfoWindow()
+    {
+        StudentInfoWindow *stuW = new StudentInfoWindow(this);
+        stuW->show();
     }
 
 //定义槽函数后一定要在CPP中实现！！！不然报错！！！

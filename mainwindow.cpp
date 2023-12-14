@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "mysqlconnector.h"
-#include "studentinfowindow.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
@@ -130,9 +129,7 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
                     }
                     else
                     {
-                        StudentInfoWindow stuInfoWindow ;
-                        stuInfoWindow.show();
-//                        this->hide();
+                        showStudentInfoWindow();
                     }
                 }
                 else

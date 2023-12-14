@@ -15,35 +15,64 @@ StudentInfoWindow::StudentInfoWindow(QWidget *parent) :
     this->setWindowTitle("教务管理系统—学生登录");
 
     //侧边栏
-    QListWidget sidebar;
-    sidebar.addItem("个人信息");
-    sidebar.addItem("课程安排");
-    sidebar.addItem("选课");
-    sidebar.addItem("个人成绩");
+    // QListWidget sidebar;
+    ui->sidebar->addItem("个人信息");
+    ui->sidebar->addItem("课程安排");
+    ui->sidebar->addItem("选课");
+    ui->sidebar->addItem("个人成绩");
+
 
     //页面
-    QStackedWidget contentStack;
+    // QStackedWidget contentStack;
 
-    QLabel *page1 = new QLabel("个人信息");
-    QLabel *page2 = new QLabel("课程安排");
-    QLabel *page3 = new QLabel("选课");
-    QLabel *page4 = new QLabel("个人成绩");
+    QWidget *page1 = createPage1();
+    QWidget *page2 = createPage2();
+    QWidget *page3 = createPage3();
+    QWidget *page4 = createPage4();
 
-    contentStack.addWidget(page1);
-    contentStack.addWidget(page2);
-    contentStack.addWidget(page3);
-    contentStack.addWidget(page4);
+    ui->contentStack->addWidget(page1);
+    ui->contentStack->addWidget(page2);
+    ui->contentStack->addWidget(page3);
+    ui->contentStack->addWidget(page4);
 
-    connect(&sidebar, &QListWidget::itemClicked, this, [&](QListWidgetItem *item){
-        int index = sidebar.row(item);
-        contentStack.setCurrentIndex(index);
+    connect(ui->sidebar, &QListWidget::itemClicked, this, [&](QListWidgetItem *item){
+        int index = ui->sidebar->row(item);
+        ui->contentStack->setCurrentIndex(index);
     });
 
-    sidebar.setParent(this);
-    contentStack.setParent(this);
+    setCentralWidget(ui->contentStack);
+
 }
 
 StudentInfoWindow::~StudentInfoWindow()
 {
     delete ui;
+}
+
+QWidget *StudentInfoWindow::createPage1()
+{
+    QWidget *page = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(page);
+    return page;
+}
+
+QWidget *StudentInfoWindow::createPage2()
+{
+    QWidget *page = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(page);
+    return page;
+}
+
+QWidget *StudentInfoWindow::createPage3()
+{
+    QWidget *page = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(page);
+    return page;
+}
+
+QWidget *StudentInfoWindow::createPage4()
+{
+    QWidget *page = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(page);
+    return page;
 }

@@ -24,6 +24,11 @@ public:
         //退出程序
         QCoreApplication::exit();
     }
+    QWidget *createPage1();
+    QWidget *createPage2();
+    QWidget *createPage3();
+    QWidget *createPage4();
+
 
 private:
     Ui::StudentInfoWindow *ui;
