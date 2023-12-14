@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "mysqlconnector.h"
+#include "studentinfowindow.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
@@ -52,7 +53,11 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // 登录按钮点击信号绑定LoginButtonClick函数，执行登录时操作
-    connect(ui->loginButton, &QPushButton::clicked, this, &MainWindow::LoginButtonClick);
+    connect(ui->loginButton, &QPushButton::clicked, this, [=](){
+        QString userName = ui->userName->text();
+        QString password = ui->password->text();
+        LoginButtonClick(userName, password);
+    });
 
 }
 
@@ -81,21 +86,73 @@ void MainWindow::setLoginProperty(bool prop = false)
 }
 
 // 开始登录
-void MainWindow::LoginButtonClick()
+void MainWindow::LoginButtonClick(const QString &userName, const QString &password)
 {
 //    QString loginPropertyStr = loginProperty ? "true" : "false";
 //    QMessageBox::information(this, "登录状态", "loginProperty = " + loginPropertyStr);
 //    qWarning() << "loginProperty = " << loginProperty;
 
-    QString tableName = loginProperty ? "teacherinfo" : "studentinfo";
     MySqlConnector *conn = new MySqlConnector();
+    conn->DataBaseConnect();
+
+    QString sql;
     QSqlQuery query;
 
-    QStringList userName;
-    userName.append((loginProperty ? "teacherid" : "studentid"));
+    if(loginProperty)
+    {
+        sql = "SELECT password FROM teacherinfo WHERE teacherid = :id";
+    }
+    else
+    {
+        sql = "SELECT password FROM studentinfo WHERE studentid = :id";
+    }
 
-    conn->DataBaseConnect();
-    query = conn->DataBaseOut(tableName, userName);
+    if(query.prepare(sql))
+    {
+        query.bindValue(":id", userName);
+        if(query.exec())
+        {
+            if(query.next())
+            {
+                QString pwd = query.value("password").toString();
+                if(pwd == password)
+                {
+                    QMessageBox::information(this, "提示", "登录成功！", QMessageBox::Ok);
+
+                    if(loginProperty)
+                    {
+
+                    }
+                    else
+                    {
+                        StudentInfoWindow stuInfoWindow;
+
+                        stuInfoWindow.show();
+                    }
+                }
+                else
+                {
+                    QMessageBox::information(this, "提示", "密码错误！请检查输入的密码是否正确！", QMessageBox::Ok);
+                }
+            }
+            else
+            {
+                QMessageBox::information(this, "提示", "账号错误", QMessageBox::Ok);
+            }
+        }
+        else
+        {
+            qDebug() << "查询失败！：" << query.lastError().text();
+        }
+    }
+    else
+    {
+        qDebug() << "准备查询失败！：" << query.lastError().text();
+    }
+
+
+
+
 
     if(query.next())
     {

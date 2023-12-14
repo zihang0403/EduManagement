@@ -29,7 +29,7 @@ public:
 
 //定义槽函数后一定要在CPP中实现！！！不然报错！！！
 public slots:
-    void LoginButtonClick();
+    void LoginButtonClick(const QString &userName, const QString &password);
     void setLoginProperty(bool prop);
 
 private:

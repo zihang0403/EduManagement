@@ -35,12 +35,12 @@ public:
     }
 
     /**
-     * @brief DataBaseOut 读取表中数据
+     * @brief DataBaseOut 读取表中一行的所有数据
      * @param tableName 表名
      * @param columns 列名
      * @return 返回包含数据的query 或 空query
      */
-    QSqlQuery DataBaseOut(const QString &tableName, const QStringList &columns)
+    QSqlQuery DataBaseOutLine(const QString &tableName, const QStringList &columns)
     {
         QSqlQuery query;
         QString sql = QString("SELECT ");
@@ -52,11 +52,18 @@ public:
 
         sql += "FROM" + tableName;
 
-        if(query.exec(sql))
-        {
-            return query;
-        }
-        return QSqlQuery();
+        DataBaseOut(query, sql);
+        return query;
+    }
+
+    /**
+     * @brief DataBaseOut 读取表中数据
+     * @param query
+     * @param sql
+     */
+    void DataBaseOut(QSqlQuery &query, const QString &sql)
+    {
+        query.exec(sql);
     }
 
     /**
