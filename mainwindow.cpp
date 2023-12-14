@@ -89,10 +89,17 @@ void MainWindow::LoginButtonClick()
 
     QString tableName = loginProperty ? "teacherinfo" : "studentinfo";
     MySqlConnector *conn = new MySqlConnector();
-    QStringList psw ;
+    QSqlQuery query;
 
-    psw.append("password");
+    QStringList userName;
+    userName.append((loginProperty ? "teacherid" : "studentid"));
+
     conn->DataBaseConnect();
-    conn->DataBaseOut(tableName, psw);
+    query = conn->DataBaseOut(tableName, userName);
+
+    if(query.next())
+    {
+
+    }
 }
 
