@@ -129,7 +129,7 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
                     }
                     else
                     {
-                        showStudentInfoWindow();
+                        showStudentInfoWindow(userName);
                     }
                 }
                 else

@@ -14,7 +14,7 @@ class StudentInfoWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StudentInfoWindow(QWidget *parent = nullptr);
+    explicit StudentInfoWindow(QWidget *parent = nullptr, QString userName = QString());
     ~StudentInfoWindow();
     void closeEvent(QCloseEvent * event) override
     {
@@ -24,10 +24,10 @@ public:
         //退出程序
         QCoreApplication::exit();
     }
-    QWidget *createPage1();
-    QWidget *createPage2();
-    QWidget *createPage3();
-    QWidget *createPage4();
+    QWidget *createPage1(QString &userName);
+    QWidget *createPage2(QString &userName);
+    QWidget *createPage3(QString &userName);
+    QWidget *createPage4(QString &userName);
 
 
 private:

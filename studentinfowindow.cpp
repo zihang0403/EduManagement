@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-StudentInfoWindow::StudentInfoWindow(QWidget *parent) :
+StudentInfoWindow::StudentInfoWindow(QWidget *parent, QString userName) :
     QMainWindow(parent),
     ui(new Ui::StudentInfoWindow)
 {
@@ -25,10 +25,10 @@ StudentInfoWindow::StudentInfoWindow(QWidget *parent) :
     //页面
     // QStackedWidget contentStack;
 
-    QWidget *page1 = createPage1();
-    QWidget *page2 = createPage2();
-    QWidget *page3 = createPage3();
-    QWidget *page4 = createPage4();
+    QWidget *page1 = createPage1(userName);
+    QWidget *page2 = createPage2(userName);
+    QWidget *page3 = createPage3(userName);
+    QWidget *page4 = createPage4(userName);
 
     ui->contentStack->addWidget(page1);
     ui->contentStack->addWidget(page2);
@@ -49,28 +49,34 @@ StudentInfoWindow::~StudentInfoWindow()
     delete ui;
 }
 
-QWidget *StudentInfoWindow::createPage1()
+QWidget *StudentInfoWindow::createPage1(QString &userName)
+{
+    QWidget *page = new QWidget;
+    QGridLayout *layout = new QGridLayout(page);
+    QLabel *nameL = new QLabel("姓名");
+    QLabel *name = new QLabel();
+    QFont font("Arial", 16);
+    nameL->setFont(font);
+    nameL->setFixedSize(200, 100);
+    layout->addWidget(nameL, 0, 0);
+    return page;
+}
+
+QWidget *StudentInfoWindow::createPage2(QString &userName)
 {
     QWidget *page = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(page);
     return page;
 }
 
-QWidget *StudentInfoWindow::createPage2()
+QWidget *StudentInfoWindow::createPage3(QString &userName)
 {
     QWidget *page = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(page);
     return page;
 }
 
-QWidget *StudentInfoWindow::createPage3()
-{
-    QWidget *page = new QWidget;
-    QVBoxLayout *layout = new QVBoxLayout(page);
-    return page;
-}
-
-QWidget *StudentInfoWindow::createPage4()
+QWidget *StudentInfoWindow::createPage4(QString &userName)
 {
     QWidget *page = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(page);
