@@ -51,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent)
         setLoginProperty(true);
     });
 
+
+    ui->loginButton->setShortcut(Qt::Key_Return);
+
     // 登录按钮点击信号绑定LoginButtonClick函数，执行登录时操作
     connect(ui->loginButton, &QPushButton::clicked, this, [=](){
         QString userName = ui->userName->text();
