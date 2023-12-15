@@ -5,6 +5,7 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 StudentInfoWindow::StudentInfoWindow(QWidget *parent, QString userName) :
     QMainWindow(parent),
@@ -20,7 +21,6 @@ StudentInfoWindow::StudentInfoWindow(QWidget *parent, QString userName) :
     ui->sidebar->addItem("课程安排");
     ui->sidebar->addItem("选课");
     ui->sidebar->addItem("个人成绩");
-
 
     //页面
     // QStackedWidget contentStack;
@@ -54,11 +54,14 @@ QWidget *StudentInfoWindow::createPage1(QString &userName)
     QWidget *page = new QWidget;
     QGridLayout *layout = new QGridLayout(page);
     QLabel *nameL = new QLabel("姓名");
-    QLabel *name = new QLabel();
+    QLabel *name = new QLabel(userName);
+    QPushButton *exit = new QPushButton("退出登录");
     QFont font("Arial", 16);
     nameL->setFont(font);
     nameL->setFixedSize(200, 100);
     layout->addWidget(nameL, 0, 0);
+    layout->addWidget(name, 0, 1);
+    layout->addWidget(exit, 1, 0);
     return page;
 }
 

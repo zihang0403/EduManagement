@@ -27,9 +27,9 @@ public:
         //退出程序
         QCoreApplication::exit();
     }
-    void showStudentInfoWindow()
+    void showStudentInfoWindow(const QString &userName)
     {
-        StudentInfoWindow *stuW = new StudentInfoWindow(this);
+        StudentInfoWindow *stuW = new StudentInfoWindow(this, userName);
         stuW->show();
     }
 
