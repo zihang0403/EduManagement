@@ -1,6 +1,9 @@
 #ifndef STUDENTINFOWINDOW_H
 #define STUDENTINFOWINDOW_H
 
+#include "Student.h"
+#include "mainwindow.h"
+
 #include <QCoreApplication>
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -14,20 +17,21 @@ class StudentInfoWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StudentInfoWindow(QWidget *parent = nullptr, QString userName = QString());
+    explicit StudentInfoWindow(QWidget *parent = nullptr, Student *student = new Student());
     ~StudentInfoWindow();
     void closeEvent(QCloseEvent * event) override
     {
         //确认接收关闭事件
         event->accept();
 
-        //退出程序
-        QCoreApplication::exit();
+        //退出当前界面回到登录窗口
+        MainWindow *main = new MainWindow;
+        main->show();
     }
-    QWidget *createPage1(QString &userName);
-    QWidget *createPage2(QString &userName);
-    QWidget *createPage3(QString &userName);
-    QWidget *createPage4(QString &userName);
+    void createPage1(QWidget *page, Student *student);
+    void createPage2(QWidget *page, Student *student);
+    void createPage3(QWidget *page, Student *student);
+    void createPage4(QWidget *page, Student *student);
 
 
 private:

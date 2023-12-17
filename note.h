@@ -1,5 +1,5 @@
 // #define NOTE
-
+// 此文件非工程中文件
 #ifdef NOTE
 
 #ifndef NOTE_H

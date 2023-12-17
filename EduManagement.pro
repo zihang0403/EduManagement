@@ -12,36 +12,43 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    courseinfowindow.cpp \
-    coursemanagewindow.cpp \
+    courseaddform.cpp \
+    coursechangeform.cpp \
+    coursedeleteform.cpp \
     dataoperation.cpp \
     main.cpp \
     mainwindow.cpp \
     note.cpp \
-    scoreinfowindow.cpp \
-    scoremanagewindow.cpp \
-    studentinfowindow.cpp
+    scoremanageform.cpp \
+    studentaddform.cpp \
+    studentinfowindow.cpp \
+    teacherinfowindow.cpp
 
 HEADERS += \
     Student.h \
-    courseinfowindow.h \
-    coursemanagewindow.h \
+    Teacher.h \
+    courseaddform.h \
+    coursechangeform.h \
+    coursedeleteform.h \
     dataoperation.h \
     mainwindow.h \
     mysqlconnector.h \
     note.h \
-    scoreinfowindow.h \
-    scoremanagewindow.h \
-    studentinfowindow.h
+    scoremanageform.h \
+    studentaddform.h \
+    studentinfowindow.h \
+    teacherinfowindow.h
 
 FORMS += \
-    courseinfowindow.ui \
-    coursemanagewindow.ui \
+    courseaddform.ui \
+    coursechangeform.ui \
+    coursedeleteform.ui \
     mainwindow.ui \
     note.ui \
-    scoreinfowindow.ui \
-    scoremanagewindow.ui \
-    studentinfowindow.ui
+    scoremanageform.ui \
+    studentaddform.ui \
+    studentinfowindow.ui \
+    teacherinfowindow.ui
 
 
 # Default rules for deployment.

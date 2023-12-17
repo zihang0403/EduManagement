@@ -1,48 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>StudentInfoWindow</class>
- <widget class="QMainWindow" name="StudentInfoWindow">
+ <class>TeacherInfoWindow</class>
+ <widget class="QMainWindow" name="TeacherInfoWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
-    <height>726</height>
+    <width>819</width>
+    <height>621</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>教务管理系统-学生</string>
+   <string>教务管理系统-教师</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="sidebar">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>0</y>
-      <width>200</width>
-      <height>1000</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>100</width>
-      <height>1000</height>
-     </size>
-    </property>
-   </widget>
    <widget class="QStackedWidget" name="contentStack">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>60</x>
       <y>0</y>
-      <width>569</width>
-      <height>1000</height>
+      <width>501</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -52,15 +30,46 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>521</width>
-        <height>631</height>
+        <x>9</x>
+        <y>19</y>
+        <width>471</width>
+        <height>561</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="teacheridL">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>工号：</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="teacherid">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="nameL">
            <property name="font">
@@ -93,14 +102,14 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QLabel" name="studentidL">
+          <widget class="QLabel" name="positionL">
            <property name="font">
             <font>
              <pointsize>16</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>学号：</string>
+            <string>职称：</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -108,7 +117,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="studentid">
+          <widget class="QLabel" name="position">
            <property name="font">
             <font>
              <pointsize>16</pointsize>
@@ -131,7 +140,7 @@
             </font>
            </property>
            <property name="text">
-            <string>专业：</string>
+            <string>学院：</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -154,12 +163,6 @@
        </item>
        <item>
         <widget class="QPushButton" name="exit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="minimumSize">
           <size>
            <width>100</width>
@@ -179,22 +182,111 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_2"/>
-    <widget class="QWidget" name="page_3"/>
-    <widget class="QWidget" name="page_4"/>
+    <widget class="QWidget" name="page_2">
+     <widget class="QWidget" name="gridLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>481</width>
+        <height>541</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="studentinfotable"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QListWidget" name="sidebar">
+    <property name="geometry">
+     <rect>
+      <x>585</x>
+      <y>0</y>
+      <width>231</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>820</width>
+     <width>819</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string> 学生管理</string>
+    </property>
+    <addaction name="actionaddstu"/>
+    <addaction name="actionchangestuinfo"/>
+    <addaction name="actiondeletestu"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>课程管理</string>
+    </property>
+    <addaction name="actionaddcourse"/>
+    <addaction name="actionchangecourseinfo"/>
+    <addaction name="actiondeletecourse"/>
+    <addaction name="actioncourseset"/>
+    <addaction name="actionscoreset"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionaddstu">
+   <property name="text">
+    <string>添加学生</string>
+   </property>
+  </action>
+  <action name="actionchangestuinfo">
+   <property name="text">
+    <string>修改学生信息</string>
+   </property>
+  </action>
+  <action name="actiondeletestu">
+   <property name="text">
+    <string>删除学生</string>
+   </property>
+  </action>
+  <action name="actionaddcourse">
+   <property name="text">
+    <string>添加课程</string>
+   </property>
+  </action>
+  <action name="actionchangecourseinfo">
+   <property name="text">
+    <string>修改课程信息</string>
+   </property>
+  </action>
+  <action name="actiondeletecourse">
+   <property name="text">
+    <string>删除课程</string>
+   </property>
+  </action>
+  <action name="actioncourseset">
+   <property name="text">
+    <string>选课管理</string>
+   </property>
+  </action>
+  <action name="actionscoreset">
+   <property name="text">
+    <string>成绩管理</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

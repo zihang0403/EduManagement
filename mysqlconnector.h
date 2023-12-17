@@ -64,9 +64,9 @@ public:
      * @param query
      * @param sql
      */
-    void DataBaseOut(QSqlQuery &query, const QString &sql)
+    bool DataBaseOut(QSqlQuery &query, const QString &sql)
     {
-        query.exec(sql);
+        return query.exec(sql);
     }
 
     /**

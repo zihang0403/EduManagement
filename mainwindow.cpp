@@ -1,14 +1,14 @@
+#include "Student.h"
 #include "mainwindow.h"
 #include "mysqlconnector.h"
 #include "ui_mainwindow.h"
+#include "studentinfowindow.h"
+#include "teacherinfowindow.h"
 
 #include <QFile>
 #include <QButtonGroup>
 #include <QMessageBox>
 #include <QSqlDatabase>
-
-// 登录属性：学生/教师
-static bool loginProperty = false;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,20 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // 将设计的用户界面加载到此类中，并设置对应的属性，信号，槽等，完成相应的初始化工作
     ui->setupUi(this);
-
-// 读取QSS文件，绝对路径没问题相对路径有问题，背景图片布局待修改
-//    QString appDir = QCoreApplication::applicationDirPath();
-//    QFile styleFile(appDir + "/mainStyle.qss");
-////    QFile styleFile(appDir + "/1.txt");
-//    if(styleFile.open(QFile::ReadOnly|QFile::Text))
-//    {
-//        QString styleSheet = QLatin1String(styleFile.readAll());
-//        this->setStyleSheet(styleSheet);
-//    }
-//    else
-//    {
-//        QMessageBox::information(this, "文件读取状态", "失败！");
-//    }
 
     // 创建ButtonGroup
     QButtonGroup *buttonGroup = new QButtonGroup(parent);
@@ -40,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 将学生按钮设置为默认选中
     ui->stuRadioButton->setChecked(true);
+    loginProperty = false;
 
     // 两个QRadioButton按钮，信号为按钮点击，绑定同一槽函数但传递不同参数
     connect(ui->stuRadioButton, &QPushButton::clicked, this, [=](){
@@ -51,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
         setLoginProperty(true);
     });
 
-
+    ui->stuRadioButton->setShortcut(Qt::Key_BraceLeft);
+    ui->teacherRadioButton->setShortcut(Qt::Key_BraceRight);
     ui->loginButton->setShortcut(Qt::Key_Return);
 
     // 登录按钮点击信号绑定LoginButtonClick函数，执行登录时操作
@@ -68,19 +56,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// 重新打开主窗口
-void MainWindow::reShowMainWindow()
-{
-    this->show();
-}
-
-// 获取当前主窗口对象并返回，用于重新打开主窗口
-MainWindow *MainWindow::getInstance()
-{
-    static MainWindow *instance;
-    return instance;
-}
-
 // 设置登录属性
 void MainWindow::setLoginProperty(bool prop = false)
 {
@@ -94,7 +69,7 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
 //    QMessageBox::information(this, "登录状态", "loginProperty = " + loginPropertyStr);
 //    qWarning() << "loginProperty = " << loginProperty;
 
-    MySqlConnector *conn = new MySqlConnector();
+    MySqlConnector *conn = new MySqlConnector;
     if(!conn->DataBaseConnect())
     {
         qDebug() << "连接失败！" << Qt::endl;
@@ -107,11 +82,11 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
 
     if(loginProperty)
     {
-        sql = "SELECT password FROM teacherinfo WHERE teacherid = :id";
+        sql = "SELECT * FROM teacherinfo WHERE teacherid = :id";
     }
     else
     {
-        sql = "SELECT password FROM studentinfo WHERE studentid = :id";
+        sql = "SELECT * FROM studentinfo WHERE studentid = :id";
     }
 
     if(query.prepare(sql))
@@ -125,14 +100,26 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
                 if(pwd == password)
                 {
                     QMessageBox::information(this, "提示", "登录成功！", QMessageBox::Ok);
+                    this->hide();
 
+                    QString name = query.value("name").toString();
+                    QString sex = query.value("sex").toString();
+                    QString institute = query.value("institute").toString();
+                    QDate bornDay = query.value("bornday").toDate();
                     if(loginProperty)
                     {
 
+                        QString position = query.value("position").toString();
+                        QString teachCourse = query.value("teachcourse").toString();
+                        Teacher *tea = new Teacher(userName, pwd, name, sex, position, institute, bornDay, teachCourse);
+                        conn->DataBaseClose();
+                        showTeacherInfoWindow(tea);
                     }
                     else
                     {
-                        showStudentInfoWindow(userName);
+                        Student *stu = new Student(userName, pwd, name, sex, bornDay, institute);
+                        conn->DataBaseClose();
+                        showStudentInfoWindow(stu);
                     }
                 }
                 else
@@ -158,3 +145,14 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
     conn->DataBaseClose();
 }
 
+void MainWindow::showStudentInfoWindow(Student *student)
+{
+    StudentInfoWindow *stuW = new StudentInfoWindow(this, student);
+    stuW->show();
+}
+
+void MainWindow::showTeacherInfoWindow(Teacher *teacher)
+{
+    TeacherInfoWindow *teaW = new TeacherInfoWindow(this, teacher);
+    teaW->show();
+}

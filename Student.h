@@ -3,14 +3,16 @@
 
 #include <QString>
 #include <QList>
+#include <QDate>
 
 class Student
 {
 public:
-    Student();
+    Student()
+        : studentID(QString()), password(QString()), name(QString()), sex(QString()), bornDay(QDate()), institute(QString()), status(false){}
     //使用&引用传递字符串避免复制对象产生的性能开销
-    Student(const QString &studentID,const QString &password, const QString &name, const QString &sex, const QString &bornDay, bool status = true)
-        : studentID(studentID), password(password), name(name), sex(sex), bornDay(bornDay), status(status) {}
+    Student(const QString &studentID ,const QString &password, const QString &name, const QString &sex, const QDate &bornDay, const QString &institute)
+        : studentID(studentID), password(password), name(name), sex(sex), bornDay(bornDay), institute(institute), status(true) {}
 
     QString getStudentID()
     {
@@ -37,14 +39,24 @@ public:
         return sex;
     }
 
-    QString getbornDay()
+    QDate getbornDay()
     {
         return bornDay;
+    }
+
+    QString getInstitute()
+    {
+        return institute;
     }
 
     QList<QString> getStudentCourse()
     {
         return studentCourse;
+    }
+
+    bool getStatus()
+    {
+        return status;
     }
 
     void addCourse(const QString &course)
@@ -67,7 +79,8 @@ private:
     QString password;
     QString name;
     QString sex;
-    QString bornDay;
+    QDate bornDay;
+    QString institute;
     bool status = false;
     QList<QString> studentCourse;
 };

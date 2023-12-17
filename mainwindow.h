@@ -4,7 +4,8 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QApplication>
-#include "studentinfowindow.h"
+#include "Student.h"
+#include "Teacher.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,10 +16,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    // 登录属性：学生/教师
+    bool loginProperty = false;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void reShowMainWindow();
-    static MainWindow *getInstance();
+    // void reShowMainWindow();
+    // static MainWindow *getInstance();
     void closeEvent(QCloseEvent * event) override
     {
         //确认接收关闭事件
@@ -27,11 +30,8 @@ public:
         //退出程序
         QCoreApplication::exit();
     }
-    void showStudentInfoWindow(const QString &userName)
-    {
-        StudentInfoWindow *stuW = new StudentInfoWindow(this, userName);
-        stuW->show();
-    }
+    void showStudentInfoWindow(Student *student);
+    void showTeacherInfoWindow(Teacher *teacher);
 
 //定义槽函数后一定要在CPP中实现！！！不然报错！！！
 public slots:
