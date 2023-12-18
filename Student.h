@@ -8,10 +8,10 @@
 class Student
 {
 public:
-    Student()
+    explicit Student()
         : studentID(QString()), password(QString()), name(QString()), sex(QString()), bornDay(QDate()), institute(QString()), status(false){}
     //使用&引用传递字符串避免复制对象产生的性能开销
-    Student(const QString &studentID ,const QString &password, const QString &name, const QString &sex, const QDate &bornDay, const QString &institute)
+    explicit Student(const QString &studentID ,const QString &password, const QString &name, const QString &sex, const QDate &bornDay, const QString &institute)
         : studentID(studentID), password(password), name(name), sex(sex), bornDay(bornDay), institute(institute), status(true) {}
 
     QString getStudentID()

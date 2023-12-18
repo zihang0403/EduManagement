@@ -172,7 +172,7 @@
     </font>
    </property>
    <property name="text">
-    <string>提交更改</string>
+    <string>查询</string>
    </property>
   </widget>
  </widget>

@@ -49,9 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
         LoginButtonClick(userName, password);
     });
 
-    connect(teacherInfoWindow, &TeacherInfoWindow::returnToMainWindow, this, &MainWindow::showMainWindow);
-    connect(studentInfoWindow, &StudentInfoWindow::returnToMainWindow, this, &MainWindow::showMainWindow);
-}
+    }
 
 MainWindow::~MainWindow()
 {
@@ -154,12 +152,14 @@ void MainWindow::showMainWindow()
 
 void MainWindow::showStudentInfoWindow(Student *student)
 {
-    studentInfoWindow = new StudentInfoWindow(this, student);
+    StudentInfoWindow *studentInfoWindow = new StudentInfoWindow(this, student);
+    connect(studentInfoWindow, &StudentInfoWindow::returnToMainWindow, this, &MainWindow::showMainWindow);
     studentInfoWindow->show();
 }
 
 void MainWindow::showTeacherInfoWindow(Teacher *teacher)
 {
-    teacherInfoWindow = new TeacherInfoWindow(this, teacher);
+    TeacherInfoWindow *teacherInfoWindow = new TeacherInfoWindow(this, teacher);
+    connect(teacherInfoWindow, &TeacherInfoWindow::returnToMainWindow, this, &MainWindow::showMainWindow);
     teacherInfoWindow->show();
 }

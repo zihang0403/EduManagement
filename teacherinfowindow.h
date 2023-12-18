@@ -2,7 +2,6 @@
 #define TEACHERINFOWINDOW_H
 
 #include "Teacher.h"
-#include "mainwindow.h"
 
 #include <QCloseEvent>
 #include <QCoreApplication>

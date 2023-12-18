@@ -2,7 +2,6 @@
 #define STUDENTINFOWINDOW_H
 
 #include "Student.h"
-#include "mainwindow.h"
 
 #include <QCoreApplication>
 #include <QMainWindow>

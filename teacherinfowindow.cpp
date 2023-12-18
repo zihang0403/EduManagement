@@ -35,12 +35,12 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
     });
 
     connect(ui->actionaddcourse, &QAction::triggered, this, [&](){
-        CourseAddForm *cAddForm = new CourseAddForm;
+        CourseAddForm *cAddForm = new CourseAddForm(this);
         cAddForm->show();
     });
 
     connect(ui->actionchangecourseinfo, &QAction::triggered, this, [&](){
-        CourseChangeForm *cChangeForm = new CourseChangeForm;
+        CourseChangeForm *cChangeForm = new CourseChangeForm(this);
         cChangeForm->show();
     });
 

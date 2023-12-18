@@ -25,6 +25,7 @@ SOURCES += \
     teacherinfowindow.cpp
 
 HEADERS += \
+    Course.h \
     Student.h \
     Teacher.h \
     courseaddform.h \

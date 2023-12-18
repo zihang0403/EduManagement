@@ -6,8 +6,6 @@
 #include <QApplication>
 #include "Student.h"
 #include "Teacher.h"
-#include "studentinfowindow.h"
-#include "teacherinfowindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,8 +18,6 @@ class MainWindow : public QMainWindow
 public:
     // 登录属性：学生/教师
     bool loginProperty = false;
-    StudentInfoWindow *studentInfoWindow = new StudentInfoWindow;
-    TeacherInfoWindow *teacherInfoWindow = new TeacherInfoWindow;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     // void reShowMainWindow();

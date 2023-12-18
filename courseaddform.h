@@ -15,6 +15,9 @@ public:
     explicit CourseAddForm(QWidget *parent = nullptr);
     ~CourseAddForm();
 
+public slots:
+    void submitBtnClick(Ui::CourseAddForm *ui);
+
 private:
     Ui::CourseAddForm *ui;
 };
