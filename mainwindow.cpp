@@ -49,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
         LoginButtonClick(userName, password);
     });
 
+    connect(teacherInfoWindow, &TeacherInfoWindow::returnToMainWindow, this, &MainWindow::showMainWindow);
+    connect(studentInfoWindow, &StudentInfoWindow::returnToMainWindow, this, &MainWindow::showMainWindow);
 }
 
 MainWindow::~MainWindow()
@@ -145,14 +147,19 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
     conn->DataBaseClose();
 }
 
+void MainWindow::showMainWindow()
+{
+    show();
+}
+
 void MainWindow::showStudentInfoWindow(Student *student)
 {
-    StudentInfoWindow *stuW = new StudentInfoWindow(this, student);
-    stuW->show();
+    studentInfoWindow = new StudentInfoWindow(this, student);
+    studentInfoWindow->show();
 }
 
 void MainWindow::showTeacherInfoWindow(Teacher *teacher)
 {
-    TeacherInfoWindow *teaW = new TeacherInfoWindow(this, teacher);
-    teaW->show();
+    teacherInfoWindow = new TeacherInfoWindow(this, teacher);
+    teacherInfoWindow->show();
 }

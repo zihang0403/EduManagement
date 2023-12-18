@@ -6,6 +6,8 @@
 #include <QApplication>
 #include "Student.h"
 #include "Teacher.h"
+#include "studentinfowindow.h"
+#include "teacherinfowindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,18 +20,20 @@ class MainWindow : public QMainWindow
 public:
     // 登录属性：学生/教师
     bool loginProperty = false;
+    StudentInfoWindow *studentInfoWindow = new StudentInfoWindow;
+    TeacherInfoWindow *teacherInfoWindow = new TeacherInfoWindow;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     // void reShowMainWindow();
     // static MainWindow *getInstance();
-    void closeEvent(QCloseEvent * event) override
-    {
-        //确认接收关闭事件
-        event->accept();
+    //    void closeEvent(QCloseEvent * event) override
+    //    {
+    //        //确认接收关闭事件
+    //        event->accept();
 
-        //退出程序
-        QCoreApplication::exit();
-    }
+    //        //退出程序
+    //        QCoreApplication::exit();
+    //    }
     void showStudentInfoWindow(Student *student);
     void showTeacherInfoWindow(Teacher *teacher);
 
@@ -37,6 +41,7 @@ public:
 public slots:
     void LoginButtonClick(const QString &userName, const QString &password);
     void setLoginProperty(bool prop);
+    void showMainWindow();
 
 private:
     Ui::MainWindow *ui;

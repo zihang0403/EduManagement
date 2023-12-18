@@ -24,13 +24,15 @@ public:
         //确认接收关闭事件
         event->accept();
 
-        //退出当前界面回到登录窗口
-        MainWindow *main = new MainWindow;
-        main->show();
+        //发出回到登录窗口的信号
+        emit returnToMainWindow();
     }
     void createPage1(QWidget *page, Teacher *teacher);
     void createPage2(QWidget *page, Teacher *teacher);
     void createPage3(QWidget *page, Teacher *teacher);
+
+signals:
+    void returnToMainWindow();
 
 private:
     Ui::TeacherInfoWindow *ui;

@@ -1,5 +1,6 @@
 #include "Student.h"
 #include "courseaddform.h"
+#include "coursechangeform.h"
 #include "mysqlconnector.h"
 #include "teacherinfowindow.h"
 #include "ui_teacherinfowindow.h"
@@ -28,10 +29,19 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         this->close();
     });
 
-    // 菜单栏按钮绑定打开添加学生界面
+    // 菜单栏按钮绑定打开窗口
     connect(ui->actionaddstu, &QAction::triggered, this, [&](){
-        CourseAddForm *cAddform = new CourseAddForm;
-        cAddform->show();
+
+    });
+
+    connect(ui->actionaddcourse, &QAction::triggered, this, [&](){
+        CourseAddForm *cAddForm = new CourseAddForm;
+        cAddForm->show();
+    });
+
+    connect(ui->actionchangecourseinfo, &QAction::triggered, this, [&](){
+        CourseChangeForm *cChangeForm = new CourseChangeForm;
+        cChangeForm->show();
     });
 
 }
