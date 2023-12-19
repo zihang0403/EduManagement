@@ -11,11 +11,7 @@ private:
     QSqlDatabase db;
 
 public:
-    /**
-     * @brief DataBaseConnect 连接数据库
-     * @return true 连接成功 false 连接失败
-     */
-    bool DataBaseConnect()
+    MySqlConnector()
     {
         db = QSqlDatabase::addDatabase("QMYSQL");
         db.setHostName("localhost");
@@ -23,7 +19,21 @@ public:
         db.setUserName("root");
         db.setPassword("123456");
         db.setDatabaseName("edumanagement");
-
+    }
+    ~MySqlConnector()
+    {
+        if(db.isOpen())
+        {
+            db.close();
+        }
+        qDebug() << "清除完毕" << Qt::endl;
+    }
+    /**
+     * @brief DataBaseConnect 连接数据库
+     * @return true 连接成功 false 连接失败
+     */
+    bool DataBaseConnect()
+    {
         if(!db.open())
         {
             QSqlError error = db.lastError();
@@ -34,6 +44,7 @@ public:
             return false;
         }
         qDebug() << "连接成功！" << Qt::endl;
+
         return true;
     }
 

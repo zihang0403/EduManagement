@@ -9,10 +9,10 @@ class Teacher
 {
 public:
     explicit Teacher()
-        : teacherID(QString()), password(QString()), name(QString()), sex(QString()), position(QString()), institute(QString()), bornDay(QDate()), teachCourse(QString()), status(false){}
+        : teacherID(QString()), password(QString()), name(QString()), sex(QString()), position(QString()), institute(QString()), bornDay(QDate()), status(false){}
     //使用&引用传递字符串避免复制对象产生的性能开销
-    explicit Teacher(const QString &teacherID ,const QString &password, const QString &name, const QString &sex,const QString &position, const QString institute, const QDate &bornDay, const QString &teachCourse)
-        : teacherID(teacherID), password(password), name(name), sex(sex), position(position), institute(institute), bornDay(bornDay), teachCourse(teachCourse), status(true) {}
+    explicit Teacher(const QString &teacherID ,const QString &password, const QString &name, const QString &sex,const QString &position, const QString institute, const QDate &bornDay)
+        : teacherID(teacherID), password(password), name(name), sex(sex), position(position), institute(institute), bornDay(bornDay), status(true) {}
 
     QString getTeacherID()
     {
@@ -54,15 +54,15 @@ public:
         return bornDay;
     }
 
-    QString getTeachCourse()
-    {
-        return teachCourse;
-    }
+//    QString getTeachCourse()
+//    {
+//        return teachCourse;
+//    }
 
-    void setTeachCourse(const QString &tCourse)
-    {
-        teachCourse = tCourse;
-    }
+//    void setTeachCourse(const QString &tCourse)
+//    {
+//        teachCourse = tCourse;
+//    }
 
     bool getStatus()
     {
@@ -77,7 +77,7 @@ private:
     QString position;
     QString institute;
     QDate bornDay;
-    QString teachCourse;
+//    QString teachCourse;
     bool status = false;
 };
 

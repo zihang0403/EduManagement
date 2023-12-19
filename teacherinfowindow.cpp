@@ -1,9 +1,12 @@
+#include "Course.h"
 #include "Student.h"
 #include "courseaddform.h"
 #include "coursechangeform.h"
 #include "mysqlconnector.h"
 #include "teacherinfowindow.h"
 #include "ui_teacherinfowindow.h"
+
+#include <QMessageBox>
 
 
 TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
@@ -18,7 +21,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
 
     createPage1(ui->contentStack->widget(0), teacher);
     createPage2(ui->contentStack->widget(1), teacher);
-    // createPage3(ui->contentStack->widget(2), teacher);
+    createPage3(ui->contentStack->widget(2), teacher);
 
     connect(ui->sidebar, &QListWidget::itemClicked, this, [&](QListWidgetItem *item){
         int index = ui->sidebar->row(item);
@@ -35,7 +38,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
     });
 
     connect(ui->actionaddcourse, &QAction::triggered, this, [&](){
-        CourseAddForm *cAddForm = new CourseAddForm(this);
+        CourseAddForm *cAddForm = new CourseAddForm(this, teacher);
         cAddForm->show();
     });
 
@@ -78,7 +81,7 @@ void TeacherInfoWindow::createPage2(QWidget *page, Teacher *teacher)
     if(!conn->DataBaseConnect())
     {
         qDebug() << "连接失败！" << Qt::endl;
-            return;
+        return;
     }
 
     QSqlQuery query;
@@ -87,40 +90,109 @@ void TeacherInfoWindow::createPage2(QWidget *page, Teacher *teacher)
     if(!conn->DataBaseOut(query, sql))
     {
         qDebug() << "查询失败！" << Qt::endl;
+        conn->DataBaseClose();
+        return;
+    }
+
+    if(query.size() != 0)
+    {
+        // 设置表格的行列数
+        studentInfoTable->setRowCount(query.size());
+        studentInfoTable->setColumnCount(5);
+
+        // 给表格写入列标签
+        QStringList headers;
+        headers << "学号" << "姓名" << "性别" << "出生日期" << "学院" ;
+        studentInfoTable->setHorizontalHeaderLabels(headers);
+
+        // 数据按行写入列标签
+        for(int row = 0; row < query.size(); ++row)
+        {
+            query.next();//首次query为空
+            Student *stu = new Student(
+                query.value("studentid").toString(),
+                query.value("password").toString(),
+                query.value("name").toString(),
+                query.value("sex").toString(),
+                query.value("bornday").toDate(),
+                query.value("institute").toString()
+                );
+
+            // 依次写入单个数据
+            studentInfoTable->setItem(row, 0, new QTableWidgetItem(stu->getStudentID()));
+            studentInfoTable->setItem(row, 1, new QTableWidgetItem(stu->getName()));
+            studentInfoTable->setItem(row, 2, new QTableWidgetItem(stu->getSex()));
+            studentInfoTable->setItem(row, 3, new QTableWidgetItem(stu->getbornDay().toString()));
+            studentInfoTable->setItem(row, 4, new QTableWidgetItem(stu->getInstitute()));
+        }
+
+        //添加数据后自动调整表格大小
+        studentInfoTable->resizeRowsToContents();
+        studentInfoTable->resizeColumnsToContents();
+    }
+
+    conn->DataBaseClose();
+    delete conn;
+}
+
+//查看课程信息
+void TeacherInfoWindow::createPage3(QWidget *page, Teacher *teacher)
+{
+    // 获取页面中表格的对象
+    QTableWidget *courseInfoTable = page->findChild<QTableWidget*>("courseinfotable");
+
+    MySqlConnector *conn = new MySqlConnector;
+    if(!conn->DataBaseConnect())
+    {
+        qDebug() << "连接失败！" << Qt::endl;
             return;
     }
 
-    // 设置表格的行列数
-    studentInfoTable->setRowCount(query.size());
-    studentInfoTable->setColumnCount(5);
-
-    // 给表格写入列标签
-    QStringList headers;
-    headers << "学号" << "姓名" << "性别" << "出生日期" << "学院" ;
-    studentInfoTable->setHorizontalHeaderLabels(headers);
-
-    // 数据按行写入列标签
-    for(int row = 0; row < query.size(); ++row)
+    QSqlQuery query;
+    QString sql = "SELECT * FROM courseinfo WHERE institute = '" + teacher->getInstitute() + "'";
+//    QString sql = "SELECT * FROM courseinfo";
+    if(!conn->DataBaseOut(query, sql))
     {
-        query.next();//首次query为空
-        Student *stu = new Student(
-            query.value("studentid").toString(),
-            query.value("password").toString(),
-            query.value("name").toString(),
-            query.value("sex").toString(),
-            query.value("bornday").toDate(),
-            query.value("institute").toString()
-            );
-
-        // 依次写入单个数据
-        studentInfoTable->setItem(row, 0, new QTableWidgetItem(stu->getStudentID()));
-        studentInfoTable->setItem(row, 1, new QTableWidgetItem(stu->getName()));
-        studentInfoTable->setItem(row, 2, new QTableWidgetItem(stu->getSex()));
-        studentInfoTable->setItem(row, 3, new QTableWidgetItem(stu->getbornDay().toString()));
-        studentInfoTable->setItem(row, 4, new QTableWidgetItem(stu->getInstitute()));
+        qDebug() << "查询失败！" << Qt::endl;
+        conn->DataBaseClose();
+        return;
     }
 
-    //添加数据后自动调整表格大小
-    studentInfoTable->resizeRowsToContents();
-    studentInfoTable->resizeColumnsToContents();
+    if(query.size() != 0)
+    {
+        // 设置表格的行列数
+        courseInfoTable->setRowCount(query.size());
+        courseInfoTable->setColumnCount(5);
+
+        // 给表格写入列标签
+        QStringList headers;
+        headers << "课程编号" << "课程名" << "学分" << "课时" << "所属学院" ;
+            courseInfoTable->setHorizontalHeaderLabels(headers);
+
+        // 数据按行写入列标签,若无数据则跳过
+        for(int row = 0; row < query.size(); ++row)
+        {
+            query.next();//首次query为空
+            Course *course = new Course(
+                query.value("courseid").toString(),
+                query.value("name").toString(),
+                query.value("coursescore").toFloat(),
+                query.value("courseperiod").toInt(),
+                query.value("institute").toString()
+                );
+
+            // 依次写入单个数据
+            courseInfoTable->setItem(row, 0, new QTableWidgetItem(course->getCourseID()));
+            courseInfoTable->setItem(row, 1, new QTableWidgetItem(course->getName()));
+            courseInfoTable->setItem(row, 2, new QTableWidgetItem(course->getCourseScore()));
+            courseInfoTable->setItem(row, 3, new QTableWidgetItem(course->getCoursePeriod()));
+            courseInfoTable->setItem(row, 4, new QTableWidgetItem(course->getInstitute()));
+        }
+
+        //添加数据后自动调整表格大小
+        courseInfoTable->resizeRowsToContents();
+        courseInfoTable->resizeColumnsToContents();
+    }
+    conn->DataBaseClose();
+    delete conn;
 }

@@ -5,14 +5,14 @@
 
 #include <QMessageBox>
 
-CourseAddForm::CourseAddForm(QWidget *parent)
+CourseAddForm::CourseAddForm(QWidget *parent, Teacher *teacher)
     : QWidget(parent, Qt::Window)
     , ui(new Ui::CourseAddForm)
 {
     ui->setupUi(this);
 
     connect(ui->submit, &QPushButton::clicked, this, [&](){
-        submitBtnClick(ui);
+        submitBtnClick(ui, teacher);
     });
 }
 
@@ -21,7 +21,7 @@ CourseAddForm::~CourseAddForm()
     delete ui;
 }
 
-void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui)
+void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui, Teacher *teacher)
 {
     MySqlConnector *conn = new MySqlConnector;
 
@@ -33,31 +33,38 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui)
 
     QString sql;
     QSqlQuery query;
+    if(teacher == nullptr)
+    {
+        qDebug() << "卡到这了！";
+    }
 
-    Course *course = new Course(ui->courseid->toPlainText(),
-                                ui->coursename->toPlainText(),
-                                ui->coursescore->toPlainText().toFloat(),
-                                ui->courseperiod->toPlainText().toInt());
+    Course *course = new Course(
+        ui->courseid->text(),
+        ui->coursename->text(),
+        ui->coursescore->text().toFloat(),
+        ui->courseperoid->text().toInt(),
+        teacher->getInstitute()
+        );
 
     sql = "SELECT * FROM courseinfo WHERE courseid = '" + course->getCourseID() + "'";
     if(!conn->DataBaseOut(query, sql))
     {
         qDebug() << "读取失败！";
+        conn->DataBaseClose();
         return;
     }
 
-    if(query.next())
+    if(!query.next())
     {
         QStringList columns;
         QList<QVariantList> dataset;
         QVariantList data;
-        columns << "courseid" << "name" << "coursescore" << "courseperiod";
-        data << course->getCourseID() << course->getName() << course->getCourseScore() << course->getCoursePeriod();
+        columns << "courseid" << "name" << "coursescore" << "courseperiod" << "institute";
+        data << course->getCourseID() << course->getName() << course->getCourseScore() << course->getCoursePeriod() << course->getInstitute();
         dataset << data;
         if(!conn->DataBaseIn("courseinfo", columns, dataset))
         {
             qDebug() << "存储失败！";
-            return;
         }
         else
         {
@@ -68,4 +75,5 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui)
     {
         QMessageBox::information(this, "提示", "此课程号已存在！", QMessageBox::Ok);
     }
+    conn->DataBaseClose();
 }

@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="verticalLayoutWidget">
@@ -183,20 +183,27 @@
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">
-     <widget class="QWidget" name="gridLayoutWidget">
+     <widget class="QTableWidget" name="studentinfotable">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>1</x>
         <y>10</y>
-        <width>481</width>
-        <height>541</height>
+        <width>500</width>
+        <height>500</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QTableWidget" name="studentinfotable"/>
-       </item>
-      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_3">
+     <widget class="QTableWidget" name="courseinfotable">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>10</y>
+        <width>500</width>
+        <height>500</height>
+       </rect>
+      </property>
      </widget>
     </widget>
    </widget>

@@ -110,15 +110,13 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
                     {
 
                         QString position = query.value("position").toString();
-                        QString teachCourse = query.value("teachcourse").toString();
-                        Teacher *tea = new Teacher(userName, pwd, name, sex, position, institute, bornDay, teachCourse);
-                        conn->DataBaseClose();
+//                        QString teachCourse = query.value("teachcourse").toString();
+                        Teacher *tea = new Teacher(userName, pwd, name, sex, position, institute, bornDay);
                         showTeacherInfoWindow(tea);
                     }
                     else
                     {
                         Student *stu = new Student(userName, pwd, name, sex, bornDay, institute);
-                        conn->DataBaseClose();
                         showStudentInfoWindow(stu);
                     }
                 }
@@ -143,10 +141,13 @@ void MainWindow::LoginButtonClick(const QString &userName, const QString &passwo
     }
 
     conn->DataBaseClose();
+    delete conn;
 }
 
 void MainWindow::showMainWindow()
 {
+    QLineEdit *password = findChild<QLineEdit*>("password");
+    password->clear();
     show();
 }
 
