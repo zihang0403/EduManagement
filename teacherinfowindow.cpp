@@ -37,13 +37,20 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
 
     });
 
-    connect(ui->actionaddcourse, &QAction::triggered, this, [&](){
+    //使用=正常，使用&捕获的teacher为nullptr
+    connect(ui->actionaddcourse, &QAction::triggered, this, [=](){
         CourseAddForm *cAddForm = new CourseAddForm(this, teacher);
+        connect(cAddForm, &CourseAddForm::courseAdded, this, [=](){
+            createPage3(ui->contentStack->widget(2), teacher);
+        });
         cAddForm->show();
     });
 
-    connect(ui->actionchangecourseinfo, &QAction::triggered, this, [&](){
-        CourseChangeForm *cChangeForm = new CourseChangeForm(this);
+    connect(ui->actionchangecourseinfo, &QAction::triggered, this, [=](){
+        CourseChangeForm *cChangeForm = new CourseChangeForm(this, teacher);
+        connect(cChangeForm, &CourseChangeForm::courseChanged, this, [=](){
+            createPage3(ui->contentStack->widget(2), teacher);
+        });
         cChangeForm->show();
     });
 
@@ -124,6 +131,7 @@ void TeacherInfoWindow::createPage2(QWidget *page, Teacher *teacher)
             studentInfoTable->setItem(row, 2, new QTableWidgetItem(stu->getSex()));
             studentInfoTable->setItem(row, 3, new QTableWidgetItem(stu->getbornDay().toString()));
             studentInfoTable->setItem(row, 4, new QTableWidgetItem(stu->getInstitute()));
+            delete stu;
         }
 
         //添加数据后自动调整表格大小
@@ -184,9 +192,10 @@ void TeacherInfoWindow::createPage3(QWidget *page, Teacher *teacher)
             // 依次写入单个数据
             courseInfoTable->setItem(row, 0, new QTableWidgetItem(course->getCourseID()));
             courseInfoTable->setItem(row, 1, new QTableWidgetItem(course->getName()));
-            courseInfoTable->setItem(row, 2, new QTableWidgetItem(course->getCourseScore()));
-            courseInfoTable->setItem(row, 3, new QTableWidgetItem(course->getCoursePeriod()));
+            courseInfoTable->setItem(row, 2, new QTableWidgetItem(QString::number(course->getCourseScore())));
+            courseInfoTable->setItem(row, 3, new QTableWidgetItem(QString::number(course->getCoursePeriod())));
             courseInfoTable->setItem(row, 4, new QTableWidgetItem(course->getInstitute()));
+            delete course;
         }
 
         //添加数据后自动调整表格大小

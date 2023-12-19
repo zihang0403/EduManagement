@@ -11,7 +11,7 @@ CourseAddForm::CourseAddForm(QWidget *parent, Teacher *teacher)
 {
     ui->setupUi(this);
 
-    connect(ui->submit, &QPushButton::clicked, this, [&](){
+    connect(ui->submit, &QPushButton::clicked, this, [=](){
         submitBtnClick(ui, teacher);
     });
 }
@@ -33,9 +33,12 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui, Teacher *teacher)
 
     QString sql;
     QSqlQuery query;
-    if(teacher == nullptr)
+
+    if(ui->courseid->text() == QString() || ui->coursename->text() == QString()
+        || ui->coursescore->text() == QString() || ui->courseid->text() == QString())
     {
-        qDebug() << "卡到这了！";
+        QMessageBox::information(this, "提示", "数据不能为空！", QMessageBox::Ok);
+        return;
     }
 
     Course *course = new Course(
@@ -51,6 +54,7 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui, Teacher *teacher)
     {
         qDebug() << "读取失败！";
         conn->DataBaseClose();
+        delete conn;
         return;
     }
 
@@ -64,11 +68,12 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui, Teacher *teacher)
         dataset << data;
         if(!conn->DataBaseIn("courseinfo", columns, dataset))
         {
-            qDebug() << "存储失败！";
+            qDebug() << "添加失败！";
         }
         else
         {
-            QMessageBox::information(this, "提示", "存储成功！", QMessageBox::Ok);
+            QMessageBox::information(this, "提示", "添加成功！", QMessageBox::Ok);
+            emit courseAdded();
         }
     }
     else
@@ -76,4 +81,5 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui, Teacher *teacher)
         QMessageBox::information(this, "提示", "此课程号已存在！", QMessageBox::Ok);
     }
     conn->DataBaseClose();
+    delete conn;
 }
