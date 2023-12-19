@@ -77,7 +77,17 @@ public:
      */
     bool DataBaseOut(QSqlQuery &query, const QString &sql)
     {
-        return query.exec(sql);
+        if(!query.exec(sql))
+        {
+            QSqlError error = db.lastError();
+            qDebug() << "Failed to connect to database" << Qt::endl
+                     << "Type:" << error.type() << Qt::endl
+                     << "Database driver text:" << error.driverText() << Qt::endl
+                     << "Text:" << error.text() << Qt::endl;
+            return false;
+        }
+        qDebug() << "成功！" << Qt::endl;
+        return true;
     }
 
     /**
