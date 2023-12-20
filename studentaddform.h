@@ -20,7 +20,7 @@ public:
 signals:
     void StudentAdded();
 public slots:
-    void submitButtonClick(Ui::StudentAddForm *ui, Teacher *teacher);
+    void submitBtnClick(Ui::StudentAddForm *ui, Teacher *teacher);
 
 private:
     Ui::StudentAddForm *ui;

@@ -4,6 +4,8 @@
 #include "coursechangeform.h"
 #include "coursedeleteform.h"
 #include "mysqlconnector.h"
+#include "studentaddform.h"
+#include "studentchangeform.h"
 #include "teacherinfowindow.h"
 #include "ui_teacherinfowindow.h"
 
@@ -29,13 +31,25 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         ui->contentStack->setCurrentIndex(index);
     });
 
-    connect(ui->exit, &QPushButton::clicked, this, [&](){
+    connect(ui->exit, &QPushButton::clicked, this, [=](){
         this->close();
     });
 
     // 菜单栏按钮绑定打开窗口
-    connect(ui->actionaddstu, &QAction::triggered, this, [&](){
+    connect(ui->actionaddstu, &QAction::triggered, this, [=](){
+        StudentAddForm *sAddForm = new StudentAddForm(this, teacher);
+        connect(sAddForm, &StudentAddForm::StudentAdded, this, [=](){
+            createPage2(ui->contentStack->widget(1), teacher);
+        });
+        sAddForm->show();
+    });
 
+    connect(ui->actionchangestuinfo, &QAction::triggered, this, [=](){
+        StudentChangeForm *sChangeForm = new StudentChangeForm(this, teacher);
+        connect(sChangeForm, &StudentChangeForm::studentChanged, this, [=](){
+            createPage2(ui->contentStack->widget(1), teacher);
+        });
+        sChangeForm->show();
     });
 
     //使用=正常，使用&捕获的teacher为nullptr

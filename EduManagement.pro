@@ -21,6 +21,8 @@ SOURCES += \
     note.cpp \
     scoremanageform.cpp \
     studentaddform.cpp \
+    studentchangeform.cpp \
+    studentdeleteform.cpp \
     studentinfowindow.cpp \
     teacherinfowindow.cpp
 
@@ -37,6 +39,8 @@ HEADERS += \
     note.h \
     scoremanageform.h \
     studentaddform.h \
+    studentchangeform.h \
+    studentdeleteform.h \
     studentinfowindow.h \
     teacherinfowindow.h
 
@@ -48,6 +52,8 @@ FORMS += \
     note.ui \
     scoremanageform.ui \
     studentaddform.ui \
+    studentchangeform.ui \
+    studentdeleteform.ui \
     studentinfowindow.ui \
     teacherinfowindow.ui
 
