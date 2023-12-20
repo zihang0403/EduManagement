@@ -35,28 +35,34 @@ void CourseDeleteForm::submitBtnClick(Ui::CourseDeleteForm *ui, Teacher *teacher
     //开始查询
     if(ui->submit->text() == "查询")
     {
-        ui->courseid->setDisabled(true);
-        ui->submit->setText("确认删除");
-
-        QString sql = "SELECT * FROM courseinfo WHERE courseid = '" + ui->courseid->text() + "'";
+        QString sql = "SELECT * FROM courseinfo WHERE courseid = '" + ui->courseid->text() + "' AND institute ='"
+                      + teacher->getInstitute() + "'";
 
         if(conn->DataBaseOut(query, sql))
         {
             if(query.next())
             {
+                ui->courseid->setDisabled(true);
+                ui->submit->setText("确认删除");
                 ui->coursename->setText(query.value("name").toString());
                 ui->coursescore->setText(query.value("coursescore").toString());
                 ui->courseperiod->setText(query.value("courseperiod").toString());
+            }
+            else
+            {
+                QMessageBox::information(this, "提示", "未查找到课程", QMessageBox::Ok);
             }
         }
     }
     else    //查询后修改数据
     {
-        QString sql = "DELETE FROM courseinfo WHERE courseid = '" + ui->courseid->text() + "'";
+        QString sql = "DELETE FROM courseinfo WHERE courseid = '" + ui->courseid->text() + "' AND institute ='"
+                      + teacher->getInstitute() + "'";
         if(conn->DataBaseOut(query, sql))
         {
             QMessageBox::information(this, "提示", "删除成功！", QMessageBox::Ok);
             emit courseDeleted();
+            close();
         }
         else
         {

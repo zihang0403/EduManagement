@@ -35,11 +35,7 @@ void CourseChangeForm::submitBtnClick(Ui::CourseChangeForm *ui, Teacher *teacher
     //开始查询
     if(ui->submit->text() == "查询")
     {
-        ui->courseid->setDisabled(true);
-        ui->coursename->setDisabled(false);
-        ui->coursescore->setDisabled(false);
-        ui->courseperiod->setDisabled(false);
-        ui->submit->setText("确认修改");
+
 
         QString sql = "SELECT * FROM courseinfo WHERE courseid = '" + ui->courseid->text() + "'";
 
@@ -47,9 +43,18 @@ void CourseChangeForm::submitBtnClick(Ui::CourseChangeForm *ui, Teacher *teacher
         {
             if(query.next())
             {
+                ui->courseid->setDisabled(true);
+                ui->coursename->setDisabled(false);
+                ui->coursescore->setDisabled(false);
+                ui->courseperiod->setDisabled(false);
+                ui->submit->setText("确认修改");
                 ui->coursename->setText(query.value("name").toString());
                 ui->coursescore->setText(query.value("coursescore").toString());
                 ui->courseperiod->setText(query.value("courseperiod").toString());
+            }
+            else
+            {
+                QMessageBox::information(this, "提示", "未查找到课程", QMessageBox::Ok);
             }
         }
     }
@@ -70,6 +75,7 @@ void CourseChangeForm::submitBtnClick(Ui::CourseChangeForm *ui, Teacher *teacher
         {
             QMessageBox::information(this, "提示", "修改成功！", QMessageBox::Ok);
             emit courseChanged();
+            close();
         }
         else
         {

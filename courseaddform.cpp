@@ -74,6 +74,7 @@ void CourseAddForm::submitBtnClick(Ui::CourseAddForm *ui, Teacher *teacher)
         {
             QMessageBox::information(this, "提示", "添加成功！", QMessageBox::Ok);
             emit courseAdded();
+            close();
         }
     }
     else
