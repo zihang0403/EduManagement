@@ -11,7 +11,7 @@
  Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 19/12/2023 13:17:04
+ Date: 20/12/2023 22:54:27
 */
 
 SET NAMES utf8mb4;
@@ -56,15 +56,14 @@ CREATE TABLE `courseset`  (
   INDEX `studentid`(`studentid`) USING BTREE,
   INDEX `courseid`(`courseid`) USING BTREE,
   INDEX `teacherid`(`teacherid`) USING BTREE,
-  CONSTRAINT `courseid` FOREIGN KEY (`courseid`) REFERENCES `courseinfo` (`courseid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `studentid` FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `teacherid` FOREIGN KEY (`teacherid`) REFERENCES `teacherinfo` (`teacherid`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `courseid` FOREIGN KEY (`courseid`) REFERENCES `courseinfo` (`courseid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `studentid` FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `teacherid` FOREIGN KEY (`teacherid`) REFERENCES `teacherinfo` (`teacherid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of courseset
 -- ----------------------------
-INSERT INTO `courseset` VALUES ('10001', '1', '10001', '', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for studentinfo
@@ -83,10 +82,8 @@ CREATE TABLE `studentinfo`  (
 -- ----------------------------
 -- Records of studentinfo
 -- ----------------------------
-INSERT INTO `studentinfo` VALUES ('1', '1', 'd', '1', '2012-01-23', '计算机与信息工程学院');
 INSERT INTO `studentinfo` VALUES ('19010101', '123456', 'a', '1', '2012-01-23', '计算机与信息工程学院');
 INSERT INTO `studentinfo` VALUES ('19010102', '123454', 'b', '1', '2012-01-23', '计算机与信息工程学院');
-INSERT INTO `studentinfo` VALUES ('19010103', '123453', 'c', '1', '2012-01-23', '计算机与信息工程学院');
 
 -- ----------------------------
 -- Table structure for teacherinfo

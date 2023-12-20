@@ -75,7 +75,7 @@ void StudentChangeForm::submitBtnClick(Ui::StudentChangeForm *ui, Teacher *taech
         {
             QString sql = "UPDATE studentinfo SET name = '" + ui->name->text()
                           + "', sex = '" + ui->sex->currentText()
-//                          + "', bornday = '" + ui->bornday->date().toString("yyyy-mm-dd")
+                         + "', bornday = '" + ui->bornday->date().toString("yyyy-MM-dd")
                           + "' WHERE studentid = '" + ui->studentid->text() + "'";
 
             if(conn->DataBaseOut(query,sql))

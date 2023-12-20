@@ -35,6 +35,11 @@
       <height>1000</height>
      </size>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
    </widget>
    <widget class="QStackedWidget" name="contentStack">
     <property name="geometry">

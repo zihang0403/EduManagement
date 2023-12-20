@@ -6,6 +6,7 @@
 #include "mysqlconnector.h"
 #include "studentaddform.h"
 #include "studentchangeform.h"
+#include "studentdeleteform.h"
 #include "teacherinfowindow.h"
 #include "ui_teacherinfowindow.h"
 
@@ -50,6 +51,14 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
             createPage2(ui->contentStack->widget(1), teacher);
         });
         sChangeForm->show();
+    });
+
+    connect(ui->actiondeletestu, &QAction::triggered, this, [=](){
+        StudentDeleteForm *sDeleteForm = new StudentDeleteForm(this, teacher);
+        connect(sDeleteForm, &StudentDeleteForm::studentDeleted, this, [=](){
+            createPage2(ui->contentStack->widget(1), teacher);
+        });
+        sDeleteForm->show();
     });
 
     //使用=正常，使用&捕获的teacher为nullptr
