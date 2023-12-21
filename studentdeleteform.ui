@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>删除学生信息</string>
   </property>
   <widget class="QDateEdit" name="bornday">
    <property name="enabled">

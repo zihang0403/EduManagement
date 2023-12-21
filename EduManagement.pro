@@ -31,6 +31,7 @@ SOURCES += \
 
 HEADERS += \
     Course.h \
+    CourseSet.h \
     Student.h \
     Teacher.h \
     courseaddform.h \

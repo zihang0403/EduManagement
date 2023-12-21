@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>修改学生信息</string>
   </property>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
