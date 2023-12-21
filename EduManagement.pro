@@ -15,10 +15,13 @@ SOURCES += \
     courseaddform.cpp \
     coursechangeform.cpp \
     coursedeleteform.cpp \
+    coursesettostudentform.cpp \
+    coursesettoteacherform.cpp \
     dataoperation.cpp \
     main.cpp \
     mainwindow.cpp \
     note.cpp \
+    scoreinfoform.cpp \
     scoremanageform.cpp \
     studentaddform.cpp \
     studentchangeform.cpp \
@@ -33,10 +36,13 @@ HEADERS += \
     courseaddform.h \
     coursechangeform.h \
     coursedeleteform.h \
+    coursesettostudentform.h \
+    coursesettoteacherform.h \
     dataoperation.h \
     mainwindow.h \
     mysqlconnector.h \
     note.h \
+    scoreinfoform.h \
     scoremanageform.h \
     studentaddform.h \
     studentchangeform.h \
@@ -48,8 +54,11 @@ FORMS += \
     courseaddform.ui \
     coursechangeform.ui \
     coursedeleteform.ui \
+    coursesettostudentform.ui \
+    coursesettoteacherform.ui \
     mainwindow.ui \
     note.ui \
+    scoreinfoform.ui \
     scoremanageform.ui \
     studentaddform.ui \
     studentchangeform.ui \
