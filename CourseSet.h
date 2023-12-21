@@ -2,7 +2,6 @@
 #define COURSESET_H
 
 #include <QString>
-#include <QTime>
 #include <QVariant>
 
 
@@ -10,12 +9,17 @@ class CourseSet
 {
 public:
     explicit CourseSet();
-    explicit CourseSet(const QString &courseID, const QString &studentID, const QString &teacherID, const QVariant &courseWeekDay, const QTime &startTime, const QTime &endTime, const QString &classroom)
-        :courseID(courseID), studentID(studentID), teacherID(teacherID), courseWeekDay(courseWeekDay), startTime(startTime), endTime(endTime), classroom(classroom){}
+    explicit CourseSet(const QString &courseName, const QString &studentName, const QString &teacherName, const QString &courseWeekDay, const QString &startTime, const QString &endTime, const QString &classroom)
+        :courseName(courseName), studentName(studentName), teacherName(teacherName), courseWeekDay(courseWeekDay), startTime(startTime), endTime(endTime), classroom(classroom){}
 
     QString getCourseID()
     {
         return courseID;
+    }
+
+    void setCourseID(const QString &cID)
+    {
+        courseID = cID;
     }
 
     QString getStudentID()
@@ -30,20 +34,45 @@ public:
 
     QString getTeacherID()
     {
-        return courseID;
+        return teacherID;
     }
 
-    QVariant getCourseWeekDay()
+    void setTeacherID(const QString &tID)
+    {
+        teacherID = tID;
+    }
+
+    QString getCourseName()
+    {
+        return courseName;
+    }
+
+    QString getStudentName()
+    {
+        return studentName;
+    }
+
+    void setStudentName(const QString &sName)
+    {
+        studentName = sName;
+    }
+
+    QString getTeacherName()
+    {
+        return courseName;
+    }
+
+    QString getCourseWeekDay()
     {
         return courseWeekDay;
     }
 
-    QTime getStartTime()
+    QString getStartTime()
     {
         return startTime;
     }
 
-    QTime getEndTime()
+    QString getEndTime()
     {
         return endTime;
     }
@@ -57,9 +86,13 @@ private:
     QString courseID;
     QString studentID;
     QString teacherID;
-    QVariant courseWeekDay;
-    QTime startTime;
-    QTime endTime;
+
+    QString courseName;
+    QString studentName;
+    QString teacherName;
+    QString courseWeekDay;
+    QString startTime;
+    QString endTime;
     QString classroom;
 };
 

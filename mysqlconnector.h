@@ -126,7 +126,7 @@ public:
             for (const QVariantList &data : dataSet) {
                 //遍历数据集中的数据
                 for (int i = 0; i < data.length(); ++i) {
-                    //绑定参数
+                    //绑定参数，防止sql注入
                     query.bindValue(":" + columns[i], data[i]);
                 }
 

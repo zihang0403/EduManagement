@@ -108,8 +108,8 @@
     <rect>
      <x>220</x>
      <y>70</y>
-     <width>100</width>
-     <height>30</height>
+     <width>200</width>
+     <height>35</height>
     </rect>
    </property>
    <property name="font">
@@ -118,13 +118,13 @@
     </font>
    </property>
   </widget>
-  <widget class="QComboBox" name="teacherid">
+  <widget class="QComboBox" name="teachername">
    <property name="geometry">
     <rect>
      <x>220</x>
      <y>120</y>
-     <width>100</width>
-     <height>30</height>
+     <width>120</width>
+     <height>35</height>
     </rect>
    </property>
    <property name="font">
@@ -138,8 +138,8 @@
     <rect>
      <x>220</x>
      <y>170</y>
-     <width>100</width>
-     <height>30</height>
+     <width>120</width>
+     <height>35</height>
     </rect>
    </property>
    <property name="font">
@@ -154,7 +154,7 @@
      <x>220</x>
      <y>220</y>
      <width>100</width>
-     <height>30</height>
+     <height>35</height>
     </rect>
    </property>
    <property name="font">
@@ -172,7 +172,7 @@
      <x>220</x>
      <y>270</y>
      <width>100</width>
-     <height>30</height>
+     <height>35</height>
     </rect>
    </property>
    <property name="font">
@@ -187,7 +187,7 @@
      <x>220</x>
      <y>320</y>
      <width>100</width>
-     <height>30</height>
+     <height>35</height>
     </rect>
    </property>
    <property name="font">
@@ -196,7 +196,7 @@
     </font>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="submit">
    <property name="geometry">
     <rect>
      <x>140</x>

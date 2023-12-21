@@ -3,6 +3,7 @@
 #include "courseaddform.h"
 #include "coursechangeform.h"
 #include "coursedeleteform.h"
+#include "coursesettoteacherform.h"
 #include "mysqlconnector.h"
 #include "studentaddform.h"
 #include "studentchangeform.h"
@@ -84,6 +85,11 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
             createPage3(ui->contentStack->widget(2), teacher);
         });
         cDeleteForm->show();
+    });
+
+    connect(ui->actioncourseset, &QAction::triggered, this, [=](){
+        CourseSetToTeacherForm *cSetToTea = new CourseSetToTeacherForm(this, teacher);
+        cSetToTea->show();
     });
 
 }
