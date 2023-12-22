@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="verticalLayoutWidget">
@@ -184,6 +184,9 @@
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="QTableWidget" name="studentinfotable">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>1</x>
@@ -192,10 +195,21 @@
         <height>500</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="page_3">
      <widget class="QTableWidget" name="courseinfotable">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>1</x>
@@ -203,6 +217,37 @@
         <width>500</width>
         <height>500</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_4">
+     <widget class="QTableWidget" name="coursetimetable">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>491</width>
+        <height>511</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
      </widget>
     </widget>

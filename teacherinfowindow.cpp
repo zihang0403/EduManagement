@@ -101,6 +101,9 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
     // 添加选课
     connect(ui->actioncourseset, &QAction::triggered, this, [=](){
         CourseSetToTeacherForm *cSetToTea = new CourseSetToTeacherForm(this, teacher);
+        connect(cSetToTea, &CourseSetToTeacherForm::courseSetUpdated, this, [=](){
+            createPage4(ui->contentStack->widget(3), teacher);
+        });
         cSetToTea->show();
     });
 
@@ -262,8 +265,23 @@ void TeacherInfoWindow::createPage4(QWidget *page, Teacher *teacher)
     // 获取页面中表格的对象
     QTableWidget *courseTimeTable = page->findChild<QTableWidget*>("coursetimetable");
 
-    courseTimeTable->setColumnCount(8);
-    courseTimeTable->setRowCount(5);
+    // 设置表格行列数
+    courseTimeTable->setColumnCount(5);
+    courseTimeTable->setRowCount(7);
+
+    // 设置表格行列标
+    QStringList columnHeaders;
+    QStringList rowHeaders;
+    rowHeaders << "Monday"
+                  << "Tuesday"
+                  << "Wednesday"
+                  << "Thursday"
+                  << "Friday"
+                  << "Saturday"
+                  << "Sunday";
+    columnHeaders << "8:00" << "10:00" << "午休" << "14:00" << "16:00";
+    courseTimeTable->setHorizontalHeaderLabels(columnHeaders);
+    courseTimeTable->setVerticalHeaderLabels(rowHeaders);
 
     MySqlConnector *conn = new MySqlConnector;
     if(!conn->DataBaseConnect())
@@ -275,22 +293,25 @@ void TeacherInfoWindow::createPage4(QWidget *page, Teacher *teacher)
     QSqlQuery query;
     QString sql = "SELECT * FROM courseset WHERE teacherid = '" + teacher->getTeacherID() + "'";
 
+    // 查教师的授课信息
     if(conn->DataBaseOut(query, sql))
     {
         while(query.next())
         {
+            //存放选课相关的信息
             CourseSet *courseSet = new CourseSet(
                 query.value("courseid").toString(),
                 QString(),
                 query.value("teacherid").toString(),
                 QString(),
                 QString(),
-                QString(),
+                teacher->getName(),
                 query.value("courseweekday").toString(),
                 query.value("starttime").toTime().toString("hh:mm"),
                 query.value("endtime").toTime().toString("hh:mm"),
                 query.value("classroom").toString());
 
+            // 通过课程号查询课程名
             QSqlQuery querytmp ;
             sql = "SELECT name FROM courseinfo WHERE courseid = '" + query.value("courseid").toString() + "'";
 
@@ -298,9 +319,40 @@ void TeacherInfoWindow::createPage4(QWidget *page, Teacher *teacher)
             {
                 if(querytmp.next())
                 {
-
+                    // 添加到courseSet 对象中
+                    courseSet->setCourseName(querytmp.value("name").toString());
                 }
             }
+            else
+            {
+                qDebug() << "查询课程名失败！";
+            }
+
+            // 查行标中与选课开始时间相同的行
+            int row;
+            for (row = 0; row < courseTimeTable->rowCount(); ++row) {
+                QTableWidgetItem *rowHeader = courseTimeTable->verticalHeaderItem(row);
+                if(rowHeader->text() == courseSet->getCourseWeekDay())
+                {
+                    break;
+                }
+            }
+
+            // 查列标中与上课周相同的列
+            int column;
+            for (column = 0; column < courseTimeTable->columnCount(); ++column) {
+                QTableWidgetItem *columnHeader = courseTimeTable->horizontalHeaderItem(column);
+                if(columnHeader->text() == courseSet->getStartTime())
+                {
+                    break;
+                }
+            }
+
+            // 将课程名放入对应的行列的位置
+            QTableWidgetItem *courseTableWidgetItem = new QTableWidgetItem;
+            courseTableWidgetItem->setText("课程：" + courseSet->getCourseName() + "\n教室：" + courseSet->getClassroom());
+            courseTimeTable->setItem(row, column, courseTableWidgetItem);
+
             delete courseSet;
         }
     }
@@ -309,6 +361,9 @@ void TeacherInfoWindow::createPage4(QWidget *page, Teacher *teacher)
         qDebug() << "查询课程表失败！";
     }
 
+    // 自动调整大小
+    courseTimeTable->resizeRowsToContents();
+    courseTimeTable->resizeColumnsToContents();
 
     conn->DataBaseClose();
     delete conn;

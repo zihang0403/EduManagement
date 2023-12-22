@@ -155,6 +155,7 @@ void CourseSetToTeacherForm::submitBtnClick(Ui::CourseSetToTeacherForm *ui, Teac
         if(conn->DataBaseIn(tableName, columns, dataset))
         {
             QMessageBox::information(this, "提示", "添加选课成功！", QMessageBox::Ok);
+            emit courseSetUpdated();
             close();
         }
         else

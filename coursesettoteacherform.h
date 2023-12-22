@@ -17,6 +17,9 @@ public:
     explicit CourseSetToTeacherForm(QWidget *parent = nullptr, Teacher *teacher = new Teacher);
     ~CourseSetToTeacherForm();
 
+signals:
+    void courseSetUpdated();
+
 public slots:
     void submitBtnClick(Ui::CourseSetToTeacherForm *ui, Teacher *teacher);
 
