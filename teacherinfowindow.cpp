@@ -1,4 +1,5 @@
 #include "Course.h"
+#include "CourseSet.h"
 #include "Student.h"
 #include "courseaddform.h"
 #include "coursechangeform.h"
@@ -21,12 +22,14 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
     ui->setupUi(this);
 
     ui->sidebar->addItem("个人信息");
-    ui->sidebar->addItem("查看学生信息");
-    ui->sidebar->addItem("查看课程信息");
+    ui->sidebar->addItem("学生信息");
+    ui->sidebar->addItem("课程信息");
+    ui->sidebar->addItem("课程安排");
 
     createPage1(ui->contentStack->widget(0), teacher);
     createPage2(ui->contentStack->widget(1), teacher);
     createPage3(ui->contentStack->widget(2), teacher);
+    createPage4(ui->contentStack->widget(3), teacher);
 
     connect(ui->sidebar, &QListWidget::itemClicked, this, [&](QListWidgetItem *item){
         int index = ui->sidebar->row(item);
@@ -38,6 +41,9 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
     });
 
     // 菜单栏按钮绑定打开窗口
+    // 使用=捕获的对象正常，使用&捕获的teacher为nullptr
+
+    // 添加学生
     connect(ui->actionaddstu, &QAction::triggered, this, [=](){
         StudentAddForm *sAddForm = new StudentAddForm(this, teacher);
         connect(sAddForm, &StudentAddForm::StudentAdded, this, [=](){
@@ -46,6 +52,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         sAddForm->show();
     });
 
+    // 修改学生信息
     connect(ui->actionchangestuinfo, &QAction::triggered, this, [=](){
         StudentChangeForm *sChangeForm = new StudentChangeForm(this, teacher);
         connect(sChangeForm, &StudentChangeForm::studentChanged, this, [=](){
@@ -54,6 +61,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         sChangeForm->show();
     });
 
+    // 删除学生
     connect(ui->actiondeletestu, &QAction::triggered, this, [=](){
         StudentDeleteForm *sDeleteForm = new StudentDeleteForm(this, teacher);
         connect(sDeleteForm, &StudentDeleteForm::studentDeleted, this, [=](){
@@ -62,7 +70,8 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         sDeleteForm->show();
     });
 
-    //使用=正常，使用&捕获的teacher为nullptr
+
+    // 添加课程
     connect(ui->actionaddcourse, &QAction::triggered, this, [=](){
         CourseAddForm *cAddForm = new CourseAddForm(this, teacher);
         connect(cAddForm, &CourseAddForm::courseAdded, this, [=](){
@@ -71,6 +80,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         cAddForm->show();
     });
 
+    // 修改课程信息
     connect(ui->actionchangecourseinfo, &QAction::triggered, this, [=](){
         CourseChangeForm *cChangeForm = new CourseChangeForm(this, teacher);
         connect(cChangeForm, &CourseChangeForm::courseChanged, this, [=](){
@@ -79,6 +89,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         cChangeForm->show();
     });
 
+    // 删除课程
     connect(ui->actiondeletecourse, &QAction::triggered, this, [=](){
         CourseDeleteForm *cDeleteForm = new CourseDeleteForm(this, teacher);
         connect(cDeleteForm, &CourseDeleteForm::courseDeleted, this, [=](){
@@ -87,6 +98,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
         cDeleteForm->show();
     });
 
+    // 添加选课
     connect(ui->actioncourseset, &QAction::triggered, this, [=](){
         CourseSetToTeacherForm *cSetToTea = new CourseSetToTeacherForm(this, teacher);
         cSetToTea->show();
@@ -243,3 +255,62 @@ void TeacherInfoWindow::createPage3(QWidget *page, Teacher *teacher)
     conn->DataBaseClose();
     delete conn;
 }
+
+//查看课程表
+void TeacherInfoWindow::createPage4(QWidget *page, Teacher *teacher)
+{
+    // 获取页面中表格的对象
+    QTableWidget *courseTimeTable = page->findChild<QTableWidget*>("coursetimetable");
+
+    courseTimeTable->setColumnCount(8);
+    courseTimeTable->setRowCount(5);
+
+    MySqlConnector *conn = new MySqlConnector;
+    if(!conn->DataBaseConnect())
+    {
+        qDebug() << "连接失败！" << Qt::endl;
+            return;
+    }
+
+    QSqlQuery query;
+    QString sql = "SELECT * FROM courseset WHERE teacherid = '" + teacher->getTeacherID() + "'";
+
+    if(conn->DataBaseOut(query, sql))
+    {
+        while(query.next())
+        {
+            CourseSet *courseSet = new CourseSet(
+                query.value("courseid").toString(),
+                QString(),
+                query.value("teacherid").toString(),
+                QString(),
+                QString(),
+                QString(),
+                query.value("courseweekday").toString(),
+                query.value("starttime").toTime().toString("hh:mm"),
+                query.value("endtime").toTime().toString("hh:mm"),
+                query.value("classroom").toString());
+
+            QSqlQuery querytmp ;
+            sql = "SELECT name FROM courseinfo WHERE courseid = '" + query.value("courseid").toString() + "'";
+
+            if(conn->DataBaseOut(querytmp, sql))
+            {
+                if(querytmp.next())
+                {
+
+                }
+            }
+            delete courseSet;
+        }
+    }
+    else
+    {
+        qDebug() << "查询课程表失败！";
+    }
+
+
+    conn->DataBaseClose();
+    delete conn;
+}
+

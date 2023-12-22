@@ -94,6 +94,9 @@ CourseSetToTeacherForm::~CourseSetToTeacherForm()
 void CourseSetToTeacherForm::submitBtnClick(Ui::CourseSetToTeacherForm *ui, Teacher *teacher)
 {
     CourseSet *course = new CourseSet(
+        QString(),
+        QString(),
+        QString(),
         ui->coursename->currentText(),
         QString(),
         ui->teachername->currentText(),

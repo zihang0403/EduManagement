@@ -9,8 +9,8 @@ class CourseSet
 {
 public:
     explicit CourseSet();
-    explicit CourseSet(const QString &courseName, const QString &studentName, const QString &teacherName, const QString &courseWeekDay, const QString &startTime, const QString &endTime, const QString &classroom)
-        :courseName(courseName), studentName(studentName), teacherName(teacherName), courseWeekDay(courseWeekDay), startTime(startTime), endTime(endTime), classroom(classroom){}
+    explicit CourseSet(const QString &courseID, const QString &studentID, const QString &teacherID, const QString &courseName, const QString &studentName, const QString &teacherName, const QString &courseWeekDay, const QString &startTime, const QString &endTime, const QString &classroom)
+        :courseID(courseID), studentID(studentID), teacherID(teacherID), courseName(courseName), studentName(studentName), teacherName(teacherName), courseWeekDay(courseWeekDay), startTime(startTime), endTime(endTime), classroom(classroom){}
 
     QString getCourseID()
     {
@@ -47,6 +47,11 @@ public:
         return courseName;
     }
 
+    void setCourseName(const QString &cName)
+    {
+        courseName = cName;
+    }
+
     QString getStudentName()
     {
         return studentName;
@@ -60,6 +65,11 @@ public:
     QString getTeacherName()
     {
         return courseName;
+    }
+
+    void setTeacherName(const QString &tName)
+    {
+        teacherName = tName;
     }
 
     QString getCourseWeekDay()

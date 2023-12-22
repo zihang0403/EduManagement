@@ -29,6 +29,7 @@ public:
     void createPage1(QWidget *page, Teacher *teacher);
     void createPage2(QWidget *page, Teacher *teacher);
     void createPage3(QWidget *page, Teacher *teacher);
+    void createPage4(QWidget *page, Teacher *teacher);
 
 signals:
     void returnToMainWindow();
