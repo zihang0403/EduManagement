@@ -1,3 +1,4 @@
+#include "CourseSet.h"
 #include "mysqlconnector.h"
 #include "scoremanageform.h"
 #include "ui_scoremanageform.h"
@@ -7,15 +8,7 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
     , ui(new Ui::ScoreManageForm)
 {
     ui->setupUi(this);
-}
 
-ScoreManageForm::~ScoreManageForm()
-{
-    delete ui;
-}
-
-void ScoreManageForm::submitBtnClick(Ui::ScoreManageForm *ui, Teacher *teacher)
-{
     ui->scoremanagetable->setColumnCount(4);
 
     QStringList headers;
@@ -26,12 +19,105 @@ void ScoreManageForm::submitBtnClick(Ui::ScoreManageForm *ui, Teacher *teacher)
     if(conn->DataBaseConnect())
     {
         QSqlQuery query;
-        QString sql = "SELECT * FROM courseset WHERE teacherid = '" + teacher->getTeacherID() + "'";
+        QString sql = "SELECT * FROM courseset WHERE teacherid = '" + teacher->getTeacherID() + "' AND studentid IS NOT NULL";
+        if(conn->DataBaseOut(query, sql))
+        {
+            ui->scoremanagetable->setRowCount(query.size());
+            while(query.next())
+            {
+                for (int row = 0; row < query.size(); ++row) {
+                    CourseSet *courseSet = new CourseSet(
+                        query.value("courseid").toString(),
+                        query.value("studentid").toString(),
+                        query.value("teacherid").toString(),
+                        query.value("coursename").toString(),
+                        query.value("studentname").toString(),
+                        query.value("teachername").toString(),
+                        query.value("courseweekday").toString(),
+                        query.value("starttime").toTime().toString("hh:mm"),
+                        query.value("starttime").toTime().toString("hh:mm"),
+                        query.value("classroom").toString());
 
+                    QTableWidgetItem *cName = new QTableWidgetItem;
+                    QTableWidgetItem *sName = new QTableWidgetItem;
+                    QTableWidgetItem *tName = new QTableWidgetItem;
+                    QTableWidgetItem *score = new QTableWidgetItem;
+
+                    cName->setText(courseSet->getCourseName());
+                    sName->setText(courseSet->getStudentName());
+                    tName->setText(courseSet->getTeacherName());
+                    score->setText(query.value("score").toString());
+
+                    score->setFlags(score->flags() | Qt::ItemIsEditable);
+
+                    ui->scoremanagetable->setItem(row, 0, cName);
+                    ui->scoremanagetable->setItem(row, 1, sName);
+                    ui->scoremanagetable->setItem(row, 2, tName);
+                    ui->scoremanagetable->setItem(row, 3, score);
+
+                    delete courseSet;
+
+                }//for (int row = 0; row < query.size(); ++row)
+            }//while(query.next())
+        }//if(conn->DataBaseOut(query, sql))
+        else
+        {
+            qDebug() << "查询课程表失败！";
+        }
     }
     else
     {
         qDebug() << "数据库连接失败！";
+    }
+    delete conn;
+
+    connect(ui->submit, &QPushButton::clicked, this, [=](){
+        submitBtnClick(ui, teacher);
+    });
+}
+
+ScoreManageForm::~ScoreManageForm()
+{
+    delete ui;
+}
+
+void ScoreManageForm::submitBtnClick(Ui::ScoreManageForm *ui, Teacher *teacher)
+{
+    QStringList courseNames;
+    QStringList studentNames;
+    QStringList scores;
+
+    for (int row = 0; row < ui->scoremanagetable->rowCount(); ++row)
+    {
+        QTableWidgetItem *courseName = ui->scoremanagetable->item(0, 0);
+        QTableWidgetItem *studentName = ui->scoremanagetable->item(0, 1);
+        QTableWidgetItem *score = ui->scoremanagetable->item(0, 3);
+
+        courseNames << courseName->text();
+        studentNames << studentName->text();
+        scores << score->text();
+    }
+
+    MySqlConnector *conn = new MySqlConnector;
+    if(conn->DataBaseConnect())
+    {
+        QSqlQuery query;
+        for (int var = 0; var < ui->scoremanagetable->rowCount(); ++var) {
+            QString sql = "UPDATE courseset SET score = '" + scores[var] +
+                          "' WHERE courseName = '" + courseNames[var] +
+                          "' AND studentName = '" + studentNames[var] +
+                          "' ";
+            if(!conn->DataBaseOut(query, sql))
+            {
+                qDebug() << "更新courseset表失败！";
+                break;
+            }
+        }
+
+    }
+    else
+    {
+        qDebug() << "连接数据库失败！" ;
     }
     delete conn;
 }

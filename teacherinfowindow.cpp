@@ -6,6 +6,7 @@
 #include "coursedeleteform.h"
 #include "coursesettoteacherform.h"
 #include "mysqlconnector.h"
+#include "scoremanageform.h"
 #include "studentaddform.h"
 #include "studentchangeform.h"
 #include "studentdeleteform.h"
@@ -105,6 +106,12 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
             createPage4(ui->contentStack->widget(3), teacher);
         });
         cSetToTea->show();
+    });
+
+    // 成绩管理
+    connect(ui->actionscoreset, &QAction::triggered, this, [=](){
+        ScoreManageForm *sManageForm = new ScoreManageForm;
+        sManageForm->show();
     });
 
 }
