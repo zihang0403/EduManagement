@@ -110,7 +110,7 @@ TeacherInfoWindow::TeacherInfoWindow(QWidget *parent, Teacher *teacher)
 
     // 成绩管理
     connect(ui->actionscoreset, &QAction::triggered, this, [=](){
-        ScoreManageForm *sManageForm = new ScoreManageForm;
+        ScoreManageForm *sManageForm = new ScoreManageForm(this, teacher);
         sManageForm->show();
     });
 

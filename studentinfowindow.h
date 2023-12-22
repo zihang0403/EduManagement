@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class StudentInfoWindow;
@@ -33,6 +34,9 @@ public:
 
 signals:
     void returnToMainWindow();
+
+public slots:
+    void CourseSelect(QTableWidgetItem *courseName, QTableWidgetItem *teacherName, Student *student);
 
 private:
     Ui::StudentInfoWindow *ui;

@@ -3,6 +3,8 @@
 #include "scoremanageform.h"
 #include "ui_scoremanageform.h"
 
+#include <QMessageBox>
+
 ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
     : QWidget(parent, Qt::Window)
     , ui(new Ui::ScoreManageForm)
@@ -25,7 +27,8 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
             ui->scoremanagetable->setRowCount(query.size());
             while(query.next())
             {
-                for (int row = 0; row < query.size(); ++row) {
+                for (int row = 0; row < query.size(); ++row)
+                {
                     CourseSet *courseSet = new CourseSet(
                         query.value("courseid").toString(),
                         query.value("studentid").toString(),
@@ -48,6 +51,7 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
                     tName->setText(courseSet->getTeacherName());
                     score->setText(query.value("score").toString());
 
+                    cName->setFlags(cName->flags() & ~Qt::ItemIsEditable);
                     score->setFlags(score->flags() | Qt::ItemIsEditable);
 
                     ui->scoremanagetable->setItem(row, 0, cName);
@@ -62,7 +66,7 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
         }//if(conn->DataBaseOut(query, sql))
         else
         {
-            qDebug() << "查询课程表失败！";
+            qDebug() << "查询选课表失败！";
         }
     }
     else
@@ -110,14 +114,16 @@ void ScoreManageForm::submitBtnClick(Ui::ScoreManageForm *ui, Teacher *teacher)
             if(!conn->DataBaseOut(query, sql))
             {
                 qDebug() << "更新courseset表失败！";
-                break;
+                delete conn;
+                return;
             }
         }
-
+        QMessageBox::information(this, "提示", "成绩提交成功！", QMessageBox::Ok);
     }
     else
     {
         qDebug() << "连接数据库失败！" ;
     }
     delete conn;
+    close();
 }

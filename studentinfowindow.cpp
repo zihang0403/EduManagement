@@ -1,3 +1,5 @@
+#include "CourseSet.h"
+#include "mysqlconnector.h"
 #include "studentinfowindow.h"
 #include "ui_studentinfowindow.h"
 
@@ -6,6 +8,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QMessageBox>
 
 StudentInfoWindow::StudentInfoWindow(QWidget *parent, Student *student) :
     QMainWindow(parent),
@@ -30,6 +33,20 @@ StudentInfoWindow::StudentInfoWindow(QWidget *parent, Student *student) :
     connect(ui->sidebar, &QListWidget::itemClicked, this, [&](QListWidgetItem *item){
         int index = ui->sidebar->row(item);
         ui->contentStack->setCurrentIndex(index);
+    });
+
+    connect(ui->coursesettable, &QTableWidget::itemDoubleClicked, this, [=](QTableWidgetItem *item){
+        QTableWidgetItem *text = ui->coursetimetable->item(item->row(), 5);
+        QTableWidgetItem *courseName = ui->coursetimetable->item(item->row(), 0);
+        QTableWidgetItem *teacherName = ui->coursetimetable->item(item->row(), 1);
+        QMessageBox::information(this, " ", " ");
+        qDebug() <<"text::" <<text->text();
+        if(text->text() != "已选")
+        {
+            CourseSelect(courseName, teacherName, student);
+            createPage3(ui->contentStack->widget(2), student);
+        }
+
     });
 
     // 退出按钮绑定关闭窗口
@@ -61,18 +78,331 @@ void StudentInfoWindow::createPage1(QWidget *page, Student *student)
     }
 }
 
+//课程安排
 void StudentInfoWindow::createPage2(QWidget *page, Student *student)
 {
+    // 获取页面中表格的对象
+    QTableWidget *courseTimeTable = page->findChild<QTableWidget*>("coursetimetable");
 
+    // 设置表格行列数
+    courseTimeTable->setColumnCount(5);
+    courseTimeTable->setRowCount(7);
+
+    // 设置表格行列标
+    QStringList columnHeaders;
+    QStringList rowHeaders;
+    rowHeaders << "Monday"
+                  << "Tuesday"
+                  << "Wednesday"
+                  << "Thursday"
+                  << "Friday"
+                  << "Saturday"
+                  << "Sunday";
+    columnHeaders << "8:00" << "10:00" << "午休" << "14:00" << "16:00";
+    courseTimeTable->setHorizontalHeaderLabels(columnHeaders);
+    courseTimeTable->setVerticalHeaderLabels(rowHeaders);
+
+    MySqlConnector *conn = new MySqlConnector;
+    if(!conn->DataBaseConnect())
+    {
+        qDebug() << "连接失败！" << Qt::endl;
+            return;
+    }
+
+    QSqlQuery query;
+    QString sql = "SELECT * FROM courseset WHERE studentid = '" + student->getStudentID() + "'";
+
+    // 查学生的课程安排
+    if(conn->DataBaseOut(query, sql))
+    {
+        while(query.next())
+        {
+            //存放选课相关的信息
+            CourseSet *courseSet = new CourseSet(
+                query.value("courseid").toString(),
+                query.value("studentid").toString(),
+                query.value("teacherid").toString(),
+                query.value("coursename").toString(),
+                query.value("studentname").toString(),
+                query.value("teachername").toString(),
+                query.value("courseweekday").toString(),
+                query.value("starttime").toTime().toString("hh:mm"),
+                query.value("endtime").toTime().toString("hh:mm"),
+                query.value("classroom").toString());
+
+            // 查行标中与选课开始时间相同的行
+            int row;
+            for (row = 0; row < courseTimeTable->rowCount(); ++row) {
+                QTableWidgetItem *rowHeader = courseTimeTable->verticalHeaderItem(row);
+                if(rowHeader->text() == courseSet->getCourseWeekDay())
+                {
+                    break;
+                }
+            }
+
+            // 查列标中与上课周相同的列
+            int column;
+            for (column = 0; column < courseTimeTable->columnCount(); ++column) {
+                QTableWidgetItem *columnHeader = courseTimeTable->horizontalHeaderItem(column);
+                if(columnHeader->text() == courseSet->getStartTime())
+                {
+                    break;
+                }
+            }
+
+            // 将课程名放入对应的行列的位置
+            QTableWidgetItem *courseTableWidgetItem = new QTableWidgetItem;
+            courseTableWidgetItem->setText("课程：" + courseSet->getCourseName() +
+                                           "\n教室：" + courseSet->getClassroom() +
+                                           "\n授课教师：" + courseSet->getTeacherName());
+            courseTimeTable->setItem(row, column, courseTableWidgetItem);
+
+            delete courseSet;
+        }
+    }
+    else
+    {
+        qDebug() << "查询课程表失败！";
+    }
+
+    // 自动调整大小
+    courseTimeTable->resizeRowsToContents();
+    courseTimeTable->resizeColumnsToContents();
+
+    conn->DataBaseClose();
+    delete conn;
 }
 
+//选课
 void StudentInfoWindow::createPage3(QWidget *page, Student *student)
 {
-    QVBoxLayout *layout = new QVBoxLayout(page);
+    // 获取页面中表格的对象
+    QTableWidget *courseTimeTable = page->findChild<QTableWidget*>("coursesettable");
+
+    courseTimeTable->setColumnCount(6);
+
+    QStringList headers;
+    headers << "课程"
+            << "授课教师"
+            << "上课日期"
+            << "起止时间"
+            << "教室"
+            << "备注";
+
+    courseTimeTable->setHorizontalHeaderLabels(headers);
+
+    MySqlConnector *conn = new MySqlConnector;
+
+    if(conn->DataBaseConnect())
+    {
+        QSqlQuery query;
+        QString sql = "SELECT * FROM courseset WHERE studentid IS NULL OR studentid = '" + student->getStudentID() + "'";
+        if(conn->DataBaseOut(query, sql))
+        {
+            courseTimeTable->setRowCount(query.size());
+            for(int row = 0; row < query.size(); ++row)
+            {
+                query.next();
+                CourseSet *courseSet = new CourseSet(
+                    query.value("courseid").toString(),
+                    query.value("studentid").toString(),
+                    query.value("teacherid").toString(),
+                    query.value("coursename").toString(),
+                    query.value("studentname").toString(),
+                    query.value("teachername").toString(),
+                    query.value("courseweekday").toString(),
+                    query.value("starttime").toTime().toString("hh:mm"),
+                    query.value("endtime").toTime().toString("hh:mm"),
+                    query.value("classroom").toString());
+
+                QTableWidgetItem *courseName = new QTableWidgetItem;
+                QTableWidgetItem *teacherName = new QTableWidgetItem;
+                QTableWidgetItem *courseWeekday = new QTableWidgetItem;
+                QTableWidgetItem *courseTime = new QTableWidgetItem;
+                QTableWidgetItem *classroom = new QTableWidgetItem;
+                QTableWidgetItem *text = new QTableWidgetItem;
+
+                courseName->setText(courseSet->getCourseName());
+                teacherName->setText(courseSet->getTeacherName());
+                courseWeekday->setText(courseSet->getCourseWeekDay());
+                courseTime->setText(courseSet->getStartTime() + "-" + courseSet->getEndTime());
+                classroom->setText(courseSet->getClassroom());
+
+                if(courseSet->getStudentID() == student->getStudentID())
+                {
+                    text->setText("已选");
+                }
+
+                courseTimeTable->setItem(row, 0, courseName);
+                courseTimeTable->setItem(row, 1, teacherName);
+                courseTimeTable->setItem(row, 2, courseWeekday);
+                courseTimeTable->setItem(row, 3, courseTime);
+                courseTimeTable->setItem(row, 4, classroom);
+                courseTimeTable->setItem(row, 5, text);
+
+                delete courseSet;
+            }
+
+            courseTimeTable->resizeColumnsToContents();
+            courseTimeTable->resizeRowsToContents();
+
+        }
+        else
+        {
+            qDebug() << "查询选课信息失败！";
+        }
+    }
+    else
+    {
+        qDebug() << "数据库连接失败！";
+    }
+
+    delete conn;
 
 }
 
 void StudentInfoWindow::createPage4(QWidget *page, Student *student)
 {
-    QVBoxLayout *layout = new QVBoxLayout(page);
+    // 获取页面中表格的对象
+    QTableWidget *scoreInfoTable = page->findChild<QTableWidget*>("scoreinfotable");
+
+    scoreInfoTable->setColumnCount(4);
+
+    QStringList headers;
+    headers << "课程" << "学生" << "教师" << "成绩";
+    scoreInfoTable->setHorizontalHeaderLabels(headers);
+
+    MySqlConnector *conn = new MySqlConnector;
+    if(conn->DataBaseConnect())
+    {
+        QSqlQuery query;
+        QString sql = "SELECT * FROM courseset WHERE studentid = '" + student->getStudentID() + "'";
+        if(conn->DataBaseOut(query, sql))
+        {
+            scoreInfoTable->setRowCount(query.size());
+            while(query.next())
+            {
+                for (int row = 0; row < query.size(); ++row)
+                {
+                    CourseSet *courseSet = new CourseSet(
+                        query.value("courseid").toString(),
+                        query.value("studentid").toString(),
+                        query.value("teacherid").toString(),
+                        query.value("coursename").toString(),
+                        query.value("studentname").toString(),
+                        query.value("teachername").toString(),
+                        query.value("courseweekday").toString(),
+                        query.value("starttime").toTime().toString("hh:mm"),
+                        query.value("starttime").toTime().toString("hh:mm"),
+                        query.value("classroom").toString());
+
+                    QTableWidgetItem *cName = new QTableWidgetItem;
+                    QTableWidgetItem *sName = new QTableWidgetItem;
+                    QTableWidgetItem *tName = new QTableWidgetItem;
+                    QTableWidgetItem *score = new QTableWidgetItem;
+
+                    cName->setText(courseSet->getCourseName());
+                    sName->setText(courseSet->getStudentName());
+                    tName->setText(courseSet->getTeacherName());
+                    score->setText(query.value("score").toString());
+
+                    cName->setFlags(cName->flags() & ~Qt::ItemIsEditable);
+                    score->setFlags(score->flags() | Qt::ItemIsEditable);
+
+                    scoreInfoTable->setItem(row, 0, cName);
+                    scoreInfoTable->setItem(row, 1, sName);
+                    scoreInfoTable->setItem(row, 2, tName);
+                    scoreInfoTable->setItem(row, 3, score);
+
+                    delete courseSet;
+
+                }//for (int row = 0; row < query.size(); ++row)
+            }//while(query.next())
+        }//if(conn->DataBaseOut(query, sql))
+        else
+        {
+            qDebug() << "查询成绩失败！";
+        }
+    }
+    else
+    {
+        qDebug() << "数据库连接失败！";
+    }
+    delete conn;
+
+}
+
+void StudentInfoWindow::CourseSelect(QTableWidgetItem *courseName, QTableWidgetItem *teacherName, Student *student)
+{
+    MySqlConnector *conn = new MySqlConnector;
+
+    if(conn->DataBaseConnect())
+    {
+        QSqlQuery query;
+        QString sql = "SELECT * FROM courseset WHERE coursename = '" +
+                      courseName->text() + "' AND teachername = '" +
+                      teacherName->text() + "' AND studentid IS NULL";
+        if(conn->DataBaseOut(query, sql))
+        {
+            if(query.next())
+            {
+                CourseSet *courseSet = new CourseSet(
+                    query.value("courseid").toString(),
+                    query.value("studentid").toString(),
+                    query.value("teacherid").toString(),
+                    query.value("coursename").toString(),
+                    query.value("studentname").toString(),
+                    query.value("teachername").toString(),
+                    query.value("courseweekday").toString(),
+                    query.value("starttime").toTime().toString("hh:mm"),
+                    query.value("endtime").toTime().toString("hh:mm"),
+                    query.value("classroom").toString());
+
+                QString tableName = "courseSet";
+                QStringList columns;
+                columns << "courseid"
+                        << "coursename"
+                        << "studentid"
+                        << "studentname"
+                        << "teacherid"
+                        << "teachername"
+                        << "courseweekday"
+                        << "starttime"
+                        << "endtime"
+                        << "classroom";
+                QList<QVariantList> dataset;
+                QVariantList data;
+                data << courseSet->getCourseID()
+                     << courseSet->getCourseName()
+                     << student->getStudentID()
+                     << student->getName()
+                     << courseSet->getTeacherID()
+                     << courseSet->getTeacherName()
+                     << courseSet->getCourseWeekDay()
+                     << courseSet->getStartTime()
+                     << courseSet->getEndTime()
+                     << courseSet->getClassroom();
+                dataset << data;
+
+                if(conn->DataBaseIn(tableName, columns, dataset))
+                {
+                    QMessageBox::information(this, "提示", "选课成功！");
+                }
+                else
+                {
+                    qDebug() << "选课失败！";
+                }
+                delete courseSet;
+            }
+        }
+        else
+        {
+            qDebug() << "查询选课信息失败！";
+        }
+    }
+    else
+    {
+        qDebug() << "数据库连接失败！";
+    }
+    delete conn;
 }

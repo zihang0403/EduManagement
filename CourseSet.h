@@ -64,7 +64,7 @@ public:
 
     QString getTeacherName()
     {
-        return courseName;
+        return teacherName;
     }
 
     void setTeacherName(const QString &tName)
