@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : Zihang
+ Source Server         : zihang
  Source Server Type    : MySQL
  Source Server Version : 80023
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 22/12/2023 16:26:20
+ Date: 24/12/2023 22:03:29
 */
 
 SET NAMES utf8mb4;
@@ -25,7 +25,7 @@ CREATE TABLE `courseinfo`  (
   `courseid` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `coursescore` float NULL DEFAULT NULL,
-  `courseperiod` int NULL DEFAULT NULL,
+  `courseperiod` int(0) NULL DEFAULT NULL,
   `majorid` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `instituteid` char(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `institute` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -33,9 +33,9 @@ CREATE TABLE `courseinfo`  (
   INDEX `majorid`(`majorid`) USING BTREE,
   INDEX `instituteid2`(`instituteid`) USING BTREE,
   INDEX `name`(`name`) USING BTREE,
-  CONSTRAINT `majorid` FOREIGN KEY (`majorid`) REFERENCES `majorinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `instituteid2` FOREIGN KEY (`instituteid`) REFERENCES `instituteinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+  CONSTRAINT `instituteid2` FOREIGN KEY (`instituteid`) REFERENCES `instituteinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `majorid` FOREIGN KEY (`majorid`) REFERENCES `majorinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of courseinfo
@@ -59,10 +59,10 @@ CREATE TABLE `courseset`  (
   `teacherid` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `teachername` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `courseweekday` set('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
-  `starttime` time NULL DEFAULT NULL,
-  `endtime` time NULL DEFAULT NULL,
+  `starttime` time(0) NULL DEFAULT NULL,
+  `endtime` time(0) NULL DEFAULT NULL,
   `classroom` char(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `score` int NULL DEFAULT NULL,
+  `score` int(0) NULL DEFAULT NULL,
   INDEX `studentid`(`studentid`) USING BTREE,
   INDEX `courseid`(`courseid`) USING BTREE,
   INDEX `teacherid`(`teacherid`) USING BTREE,
@@ -70,19 +70,24 @@ CREATE TABLE `courseset`  (
   INDEX `studentname`(`studentname`) USING BTREE,
   INDEX `teachername`(`teachername`) USING BTREE,
   CONSTRAINT `courseid` FOREIGN KEY (`courseid`) REFERENCES `courseinfo` (`courseid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `studentid` FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `teacherid` FOREIGN KEY (`teacherid`) REFERENCES `teacherinfo` (`teacherid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `coursename` FOREIGN KEY (`coursename`) REFERENCES `courseinfo` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `studentid` FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `studentname` FOREIGN KEY (`studentname`) REFERENCES `studentinfo` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `teacherid` FOREIGN KEY (`teacherid`) REFERENCES `teacherinfo` (`teacherid`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `teachername` FOREIGN KEY (`teachername`) REFERENCES `teacherinfo` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of courseset
 -- ----------------------------
 INSERT INTO `courseset` VALUES ('10001', '高等数学', '19010101', '张三', '10001', ' 王强', 'Monday', '10:00:00', '12:00:00', 'A103', 50);
 INSERT INTO `courseset` VALUES ('10002', '数据结构', NULL, NULL, '10001', ' 王强', 'Wednesday', '08:00:00', '09:40:00', 'D417', NULL);
+INSERT INTO `courseset` VALUES ('10003', '计算机网络', NULL, NULL, '10001', ' 王强', 'Thursday', '14:00:00', '15:40:00', 'A202', NULL);
+INSERT INTO `courseset` VALUES ('10001', '高等数学', NULL, NULL, '10001', ' 王强', 'Monday', '08:00:00', '09:40:00', 'A101', NULL);
+INSERT INTO `courseset` VALUES ('10002', '数据结构', '19010101', '张三', '10001', ' 王强', 'Wednesday', '08:00:00', '09:40:00', 'D417', NULL);
 INSERT INTO `courseset` VALUES ('10003', '计算机网络', '19010101', '张三', '10001', ' 王强', 'Thursday', '14:00:00', '15:40:00', 'A202', NULL);
+INSERT INTO `courseset` VALUES ('10002', '数据结构', '1', '1', '10001', ' 王强', 'Wednesday', '08:00:00', '09:40:00', 'D417', NULL);
+INSERT INTO `courseset` VALUES ('10003', '计算机网络', '1', '1', '10001', ' 王强', 'Thursday', '14:00:00', '15:40:00', 'A202', NULL);
 
 -- ----------------------------
 -- Table structure for instituteinfo
@@ -117,7 +122,7 @@ INSERT INTO `instituteinfo` VALUES ('05', '软件学院');
 -- ----------------------------
 DROP TABLE IF EXISTS `majorinfo`;
 CREATE TABLE `majorinfo`  (
-  `index` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `index` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id` char(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `major` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `instituteid` char(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -126,8 +131,8 @@ CREATE TABLE `majorinfo`  (
   INDEX `instituteid`(`instituteid`) USING BTREE,
   INDEX `institute`(`institute`) USING BTREE,
   INDEX `id`(`id`) USING BTREE,
-  CONSTRAINT `instituteid` FOREIGN KEY (`instituteid`) REFERENCES `instituteinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `institute` FOREIGN KEY (`institute`) REFERENCES `instituteinfo` (`institute`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `institute` FOREIGN KEY (`institute`) REFERENCES `instituteinfo` (`institute`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `instituteid` FOREIGN KEY (`instituteid`) REFERENCES `instituteinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -194,7 +199,7 @@ CREATE TABLE `studentinfo`  (
   INDEX `name`(`name`) USING BTREE,
   CONSTRAINT `instituteid3` FOREIGN KEY (`instituteid`) REFERENCES `instituteinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `majorid2` FOREIGN KEY (`majorid`) REFERENCES `majorinfo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of studentinfo
@@ -205,8 +210,6 @@ INSERT INTO `studentinfo` VALUES ('19040102', '123456', 'aaa', '男', '2000-01-0
 INSERT INTO `studentinfo` VALUES ('19040103', '123454', 'b', '1', '2012-01-23', '01', '04', '计算机与信息工程学院', 2019);
 INSERT INTO `studentinfo` VALUES ('19040104', '123453', 'c', '1', '2012-01-23', '01', '04', '计算机与信息工程学院', 2019);
 INSERT INTO `studentinfo` VALUES ('19040105', '19010104', '张委员', '男', '2000-01-06', '01', '04', '计算机与信息工程学院', 2019);
-INSERT INTO `studentinfo` VALUES ('19040106', '19010105', '张巍远', '男', '2001-04-22', '01', '04', '计算机与信息工程学院', 2019);
-INSERT INTO `studentinfo` VALUES ('19040107', '19040420', '郭震源', '男', '2001-04-30', '01', '04', '计算机与信息工程学院', 2019);
 
 -- ----------------------------
 -- Table structure for teacherinfo
@@ -223,7 +226,7 @@ CREATE TABLE `teacherinfo`  (
   `authority` set('Normal','Administrator') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`teacherid`) USING BTREE,
   INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of teacherinfo
