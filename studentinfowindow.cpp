@@ -36,14 +36,14 @@ StudentInfoWindow::StudentInfoWindow(QWidget *parent, Student *student) :
     });
 
     connect(ui->coursesettable, &QTableWidget::itemDoubleClicked, this, [=](QTableWidgetItem *item){
-        QTableWidgetItem *text = ui->coursetimetable->item(item->row(), 5);
-        QTableWidgetItem *courseName = ui->coursetimetable->item(item->row(), 0);
-        QTableWidgetItem *teacherName = ui->coursetimetable->item(item->row(), 1);
-        QMessageBox::information(this, " ", " ");
-        qDebug() <<"text::" <<text->text();
-        if(text->text() != "已选")
+        QTableWidgetItem *notes = ui->coursesettable->item(item->row(), 5);
+        QTableWidgetItem *courseName = ui->coursesettable->item(item->row(), 0);
+        QTableWidgetItem *teacherName = ui->coursesettable->item(item->row(), 1);
+
+        if(notes->text() != "已选")
         {
             CourseSelect(courseName, teacherName, student);
+            createPage2(ui->contentStack->widget(1), student);
             createPage3(ui->contentStack->widget(2), student);
         }
 
@@ -195,6 +195,8 @@ void StudentInfoWindow::createPage3(QWidget *page, Student *student)
 
     if(conn->DataBaseConnect())
     {
+        int offset = 0;
+        bool courseSetFlag = true;
         QSqlQuery query;
         QString sql = "SELECT * FROM courseset WHERE studentid IS NULL OR studentid = '" + student->getStudentID() + "'";
         if(conn->DataBaseOut(query, sql))
@@ -203,49 +205,69 @@ void StudentInfoWindow::createPage3(QWidget *page, Student *student)
             for(int row = 0; row < query.size(); ++row)
             {
                 query.next();
-                CourseSet *courseSet = new CourseSet(
-                    query.value("courseid").toString(),
-                    query.value("studentid").toString(),
-                    query.value("teacherid").toString(),
-                    query.value("coursename").toString(),
-                    query.value("studentname").toString(),
-                    query.value("teachername").toString(),
-                    query.value("courseweekday").toString(),
-                    query.value("starttime").toTime().toString("hh:mm"),
-                    query.value("endtime").toTime().toString("hh:mm"),
-                    query.value("classroom").toString());
-
-                QTableWidgetItem *courseName = new QTableWidgetItem;
-                QTableWidgetItem *teacherName = new QTableWidgetItem;
-                QTableWidgetItem *courseWeekday = new QTableWidgetItem;
-                QTableWidgetItem *courseTime = new QTableWidgetItem;
-                QTableWidgetItem *classroom = new QTableWidgetItem;
-                QTableWidgetItem *text = new QTableWidgetItem;
-
-                courseName->setText(courseSet->getCourseName());
-                teacherName->setText(courseSet->getTeacherName());
-                courseWeekday->setText(courseSet->getCourseWeekDay());
-                courseTime->setText(courseSet->getStartTime() + "-" + courseSet->getEndTime());
-                classroom->setText(courseSet->getClassroom());
-
-                if(courseSet->getStudentID() == student->getStudentID())
+                QSqlQuery querytmp;
+                sql = "SELECT * FROM courseset WHERE studentid = '" + student->getStudentID() + "'";
+                if(conn->DataBaseOut(querytmp, sql))
                 {
-                    text->setText("已选");
+                    while(querytmp.next())
+                    {
+                        courseSetFlag = true;
+                        if(query.value("courseid").toString() == querytmp.value("courseid").toString())
+                        {
+                            if(query.value("studentid").toString().isEmpty())
+                            {
+                                --offset;
+                            }
+                            courseSetFlag = false;
+                            break;
+                        }
+                    }
+                    if(courseSetFlag || !query.value("studentid").toString().isEmpty())
+                    {
+                        CourseSet *courseSet = new CourseSet(
+                            query.value("courseid").toString(),
+                            query.value("studentid").toString(),
+                            query.value("teacherid").toString(),
+                            query.value("coursename").toString(),
+                            query.value("studentname").toString(),
+                            query.value("teachername").toString(),
+                            query.value("courseweekday").toString(),
+                            query.value("starttime").toTime().toString("hh:mm"),
+                            query.value("endtime").toTime().toString("hh:mm"),
+                            query.value("classroom").toString());
+
+                        QTableWidgetItem *courseName = new QTableWidgetItem;
+                        QTableWidgetItem *teacherName = new QTableWidgetItem;
+                        QTableWidgetItem *courseWeekday = new QTableWidgetItem;
+                        QTableWidgetItem *courseTime = new QTableWidgetItem;
+                        QTableWidgetItem *classroom = new QTableWidgetItem;
+                        QTableWidgetItem *notes = new QTableWidgetItem;
+
+                        courseName->setText(courseSet->getCourseName());
+                        teacherName->setText(courseSet->getTeacherName());
+                        courseWeekday->setText(courseSet->getCourseWeekDay());
+                        courseTime->setText(courseSet->getStartTime() + "-" + courseSet->getEndTime());
+                        classroom->setText(courseSet->getClassroom());
+
+                        if(courseSet->getStudentID() == student->getStudentID())
+                        {
+                            notes->setText("已选");
+                        }
+
+                        courseTimeTable->setItem(row + offset, 0, courseName);
+                        courseTimeTable->setItem(row + offset, 1, teacherName);
+                        courseTimeTable->setItem(row + offset, 2, courseWeekday);
+                        courseTimeTable->setItem(row + offset, 3, courseTime);
+                        courseTimeTable->setItem(row + offset, 4, classroom);
+                        courseTimeTable->setItem(row + offset, 5, notes);
+
+                        delete courseSet;
+                    }
                 }
-
-                courseTimeTable->setItem(row, 0, courseName);
-                courseTimeTable->setItem(row, 1, teacherName);
-                courseTimeTable->setItem(row, 2, courseWeekday);
-                courseTimeTable->setItem(row, 3, courseTime);
-                courseTimeTable->setItem(row, 4, classroom);
-                courseTimeTable->setItem(row, 5, text);
-
-                delete courseSet;
             }
 
             courseTimeTable->resizeColumnsToContents();
             courseTimeTable->resizeRowsToContents();
-
         }
         else
         {
@@ -280,44 +302,44 @@ void StudentInfoWindow::createPage4(QWidget *page, Student *student)
         if(conn->DataBaseOut(query, sql))
         {
             scoreInfoTable->setRowCount(query.size());
-            while(query.next())
+
+            for (int row = 0; row < query.size(); ++row)
             {
-                for (int row = 0; row < query.size(); ++row)
-                {
-                    CourseSet *courseSet = new CourseSet(
-                        query.value("courseid").toString(),
-                        query.value("studentid").toString(),
-                        query.value("teacherid").toString(),
-                        query.value("coursename").toString(),
-                        query.value("studentname").toString(),
-                        query.value("teachername").toString(),
-                        query.value("courseweekday").toString(),
-                        query.value("starttime").toTime().toString("hh:mm"),
-                        query.value("starttime").toTime().toString("hh:mm"),
-                        query.value("classroom").toString());
+                query.next();
+                CourseSet *courseSet = new CourseSet(
+                    query.value("courseid").toString(),
+                    query.value("studentid").toString(),
+                    query.value("teacherid").toString(),
+                    query.value("coursename").toString(),
+                    query.value("studentname").toString(),
+                    query.value("teachername").toString(),
+                    query.value("courseweekday").toString(),
+                    query.value("starttime").toTime().toString("hh:mm"),
+                    query.value("starttime").toTime().toString("hh:mm"),
+                    query.value("classroom").toString());
 
-                    QTableWidgetItem *cName = new QTableWidgetItem;
-                    QTableWidgetItem *sName = new QTableWidgetItem;
-                    QTableWidgetItem *tName = new QTableWidgetItem;
-                    QTableWidgetItem *score = new QTableWidgetItem;
+                QTableWidgetItem *cName = new QTableWidgetItem;
+                QTableWidgetItem *sName = new QTableWidgetItem;
+                QTableWidgetItem *tName = new QTableWidgetItem;
+                QTableWidgetItem *score = new QTableWidgetItem;
 
-                    cName->setText(courseSet->getCourseName());
-                    sName->setText(courseSet->getStudentName());
-                    tName->setText(courseSet->getTeacherName());
-                    score->setText(query.value("score").toString());
+                cName->setText(courseSet->getCourseName());
+                sName->setText(courseSet->getStudentName());
+                tName->setText(courseSet->getTeacherName());
+                score->setText(query.value("score").toString());
 
-                    cName->setFlags(cName->flags() & ~Qt::ItemIsEditable);
-                    score->setFlags(score->flags() | Qt::ItemIsEditable);
+                cName->setFlags(cName->flags() & ~Qt::ItemIsEditable);
+                score->setFlags(score->flags() | Qt::ItemIsEditable);
 
-                    scoreInfoTable->setItem(row, 0, cName);
-                    scoreInfoTable->setItem(row, 1, sName);
-                    scoreInfoTable->setItem(row, 2, tName);
-                    scoreInfoTable->setItem(row, 3, score);
+                scoreInfoTable->setItem(row, 0, cName);
+                scoreInfoTable->setItem(row, 1, sName);
+                scoreInfoTable->setItem(row, 2, tName);
+                scoreInfoTable->setItem(row, 3, score);
 
-                    delete courseSet;
+                delete courseSet;
 
-                }//for (int row = 0; row < query.size(); ++row)
-            }//while(query.next())
+            }//for (int row = 0; row < query.size(); ++row)
+
         }//if(conn->DataBaseOut(query, sql))
         else
         {

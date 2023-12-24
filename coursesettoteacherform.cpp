@@ -96,7 +96,7 @@ void CourseSetToTeacherForm::submitBtnClick(Ui::CourseSetToTeacherForm *ui, Teac
     CourseSet *course = new CourseSet(
         QString(),
         QString(),
-        QString(),
+        teacher->getTeacherID(),
         ui->coursename->currentText(),
         QString(),
         ui->teachername->currentText(),
@@ -104,8 +104,6 @@ void CourseSetToTeacherForm::submitBtnClick(Ui::CourseSetToTeacherForm *ui, Teac
         ui->starttime->currentText(),
         ui->endtime->currentText(),
         ui->classroom->currentText());
-
-    course->setTeacherID(teacher->getTeacherID());
 
     MySqlConnector *conn = new MySqlConnector;
     if(conn->DataBaseConnect())
@@ -124,28 +122,16 @@ void CourseSetToTeacherForm::submitBtnClick(Ui::CourseSetToTeacherForm *ui, Teac
             qDebug() << "查询课程号失败！";
         }
 
-        // sql = "SELECT teacherid FROM teacherinfo WHERE name = '" + course->getTeacherName() + "'";
-        // if(conn->DataBaseOut(query, sql))
-        // {
-        //     if(query.next())
-        //     {
-        //         course->setTeacherID(query.value("teacherid").toString());
-        //     }
-        // }
-        // else
-        // {
-        //     qDebug() << "查询教师工号失败！";
-        // }
-
         QString tableName = "courseset";
         QStringList columns;
-        columns << "courseid" << "studentid" << "teacherid"
+        columns << "courseid" << "coursename" << "teacherid" << "teachername"
                 << "courseweekday" << "starttime" << "endtime" << "classroom";
         QList<QVariantList> dataset;
         QVariantList data;
         data << course->getCourseID()
-             << course->getStudentName()
+             << course->getCourseName()
              << course->getTeacherID()
+             << course->getTeacherName()
              << course->getCourseWeekDay()
              << course->getStartTime()
              << course->getEndTime()

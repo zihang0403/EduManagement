@@ -279,16 +279,16 @@ void TeacherInfoWindow::createPage4(QWidget *page, Teacher *teacher)
     // 设置表格行列标
     QStringList columnHeaders;
     QStringList rowHeaders;
-    rowHeaders << "Monday"
+    columnHeaders << "Monday"
                   << "Tuesday"
                   << "Wednesday"
                   << "Thursday"
                   << "Friday"
                   << "Saturday"
                   << "Sunday";
-    columnHeaders << "8:00" << "10:00" << "午休" << "14:00" << "16:00";
-    courseTimeTable->setHorizontalHeaderLabels(columnHeaders);
-    courseTimeTable->setVerticalHeaderLabels(rowHeaders);
+    rowHeaders << "08:00" << "10:00" << "午休" << "14:00" << "16:00";
+    courseTimeTable->setHorizontalHeaderLabels(rowHeaders);
+    courseTimeTable->setVerticalHeaderLabels(columnHeaders);
 
     MySqlConnector *conn = new MySqlConnector;
     if(!conn->DataBaseConnect())
