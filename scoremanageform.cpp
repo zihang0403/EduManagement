@@ -25,10 +25,9 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
         if(conn->DataBaseOut(query, sql))
         {
             ui->scoremanagetable->setRowCount(query.size());
-            while(query.next())
-            {
                 for (int row = 0; row < query.size(); ++row)
                 {
+                    query.next();
                     CourseSet *courseSet = new CourseSet(
                         query.value("courseid").toString(),
                         query.value("studentid").toString(),
@@ -51,7 +50,10 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
                     tName->setText(courseSet->getTeacherName());
                     score->setText(query.value("score").toString());
 
+
                     cName->setFlags(cName->flags() & ~Qt::ItemIsEditable);
+                    sName->setFlags(sName->flags() & ~Qt::ItemIsEditable);
+                    tName->setFlags(tName->flags() & ~Qt::ItemIsEditable);
                     score->setFlags(score->flags() | Qt::ItemIsEditable);
 
                     ui->scoremanagetable->setItem(row, 0, cName);
@@ -62,7 +64,7 @@ ScoreManageForm::ScoreManageForm(QWidget *parent, Teacher *teacher)
                     delete courseSet;
 
                 }//for (int row = 0; row < query.size(); ++row)
-            }//while(query.next())
+
         }//if(conn->DataBaseOut(query, sql))
         else
         {
